@@ -231,7 +231,7 @@ thead th {
 }
 tbody td { position: relative; z-index: 1; }
 thead th.th-match { text-align: left; width: 200px; max-width: 200px; vertical-align: middle; }
-thead th.th-typer { min-width: 26px; font-size: 9px; padding: 10px 1px; vertical-align: middle; border-left: 1px solid #2a2a2a; }
+thead th.th-typer { width: 46px; min-width: 46px; max-width: 46px; font-size: 8px; padding: 10px 2px; vertical-align: middle; border-left: 1px solid #2a2a2a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .th-group-typy {
   background: rgba(245,197,24,0.1);
@@ -259,14 +259,14 @@ td.td-group {
 }
 td.td-match-name { font-weight: 600; font-size: 11px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 td.td-result { font-weight: 700; font-size: 11px; color: var(--gold); min-width: 32px; }
-td.td-score { min-width: 26px; font-size: 10px; font-weight: 600; border-radius: 4px; padding: 2px 1px; border-left: 1px solid #1e1e1e; }
+td.td-score { width: 46px; min-width: 46px; max-width: 46px; font-size: 10px; font-weight: 600; border-radius: 4px; padding: 2px 2px; border-left: 1px solid #1e1e1e; }
 
 .score-exact { background: rgba(39,174,96,0.25); color: #4ddb81; }
 .score-dir   { background: rgba(33,150,243,0.2);  color: #64b5f6; }
 .score-miss  { background: rgba(230,57,70,0.2);   color: #ef9a9a; }
 .score-empty { color: var(--gray-400); }
 
-.pkt-cell { font-weight: 700; font-size: 10px; min-width: 26px; border-left: 1px solid #1e1e1e; }
+.pkt-cell { font-weight: 700; font-size: 10px; width: 46px; min-width: 46px; max-width: 46px; border-left: 1px solid #1e1e1e; }
 .pkt-3 { color: #4ddb81; }
 .pkt-1 { color: #64b5f6; }
 .pkt-0 { color: #ef9a9a; }
