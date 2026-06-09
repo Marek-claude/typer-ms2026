@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typer MŚ 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-dark: #0a4a1a;
+  --green-mid: #0f6b28;
+  --green-light: #1a8f38;
+  --gold: #f5c518;
+  --gold-dark: #c9a000;
+  --white: #ffffff;
+  --gray-100: #f4f4f4;
+  --gray-200: #e0e0e0;
+  --gray-400: #999;
+  --gray-700: #444;
+  --red: #e63946;
+  --blue: #2196f3;
+  --hit-exact: #27ae60;
+  --hit-dir: #2196f3;
+  --hit-miss: #e63946;
+  --hit-empty: #888;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0a;
+  color: var(--white);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, var(--green-dark) 0%, #0d2f0d 50%, #000 100%);
+  border-bottom: 3px solid var(--gold);
+  padding: 24px 20px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 40px,
+    rgba(255,255,255,0.015) 40px,
+    rgba(255,255,255,0.015) 80px
+  );
+}
+.header-trophy { font-size: 48px; line-height: 1; margin-bottom: 8px; position: relative; }
+.header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(32px, 6vw, 64px);
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-shadow: 0 0 30px rgba(245,197,24,0.4);
+  position: relative;
+}
+.header-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  position: relative;
+}
+.header-source {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 8px;
+  position: relative;
+}
+.header-source a { color: var(--gold); text-decoration: none; }
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  background: #111;
+  border-bottom: 2px solid #222;
+  overflow-x: auto;
+  padding: 0 12px;
+}
+.tab {
+  padding: 14px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: var(--gray-400);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab:hover { color: var(--white); }
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ── RANKING ── */
+.ranking-section {
+  padding: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--gold-dark), transparent);
+}
+
+.ranking-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.rank-card {
+  background: linear-gradient(135deg, #1a1a1a, #111);
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  position: relative;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.rank-card:hover { transform: translateY(-2px); border-color: #444; }
+.rank-card.rank-1 { border-color: var(--gold); background: linear-gradient(135deg, #1a1500, #0f0f00); }
+.rank-card.rank-2 { border-color: #aaa; background: linear-gradient(135deg, #1a1a1a, #0f0f0f); }
+.rank-card.rank-3 { border-color: #cd7f32; background: linear-gradient(135deg, #1a0f00, #0f0800); }
+.rank-pos {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  line-height: 1;
+  color: rgba(255,255,255,0.15);
+  position: absolute;
+  top: 8px;
+  left: 12px;
+}
+.rank-medal { font-size: 24px; margin-bottom: 4px; }
+.rank-name { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--white); margin-bottom: 8px; }
+.rank-pts {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px;
+  color: var(--gold);
+  line-height: 1;
+}
+.rank-pts-label { font-size: 10px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.rank-breakdown { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
+.rank-stat { font-size: 10px; color: var(--gray-400); }
+.rank-stat span { color: var(--white); font-weight: 600; }
+.rank-mistrz { font-size: 10px; color: var(--gold); margin-top: 4px; }
+
+/* ── LEGENDA ── */
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: #111;
+  border-radius: 8px;
+  border: 1px solid #222;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--gray-400);
+}
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── TABELA MECZÓW ── */
+.matches-section {
+  padding: 0 20px 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+  display: none;
+}
+.matches-section.active { display: block; }
+
+.round-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--gray-400);
+  margin: 20px 0 8px;
+  padding-left: 4px;
+  border-left: 3px solid var(--green-mid);
+  padding-left: 10px;
+}
+
+.table-wrapper { overflow-x: auto; overflow-y: auto; max-height: 75vh; border-radius: 10px; border: 1px solid #222; margin-bottom: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px; }
+thead tr { background: linear-gradient(90deg, var(--green-dark), #0a1a0a); }
+
+thead th {
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  border-bottom: 1px solid #333;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #0a1a0a;
+}
+thead th.th-match { text-align: left; min-width: 180px; vertical-align: middle; }
+thead th.th-typer { min-width: 60px; vertical-align: middle; }
+
+.th-group-typy {
+  background: rgba(245,197,24,0.1);
+  border-bottom: 2px solid var(--gold) !important;
+  color: var(--gold) !important;
+}
+.th-group-pkt {
+  background: rgba(33,150,243,0.1);
+  border-bottom: 2px solid var(--blue) !important;
+  color: var(--blue) !important;
+}
+
+tbody tr { border-bottom: 1px solid #1a1a1a; transition: background 0.15s; }
+tbody tr:hover { background: rgba(255,255,255,0.03); }
+tbody tr.round-sep { border-top: 2px solid #333; }
+
+td { padding: 7px 8px; text-align: center; vertical-align: middle; }
+td.td-match { text-align: left; padding-left: 12px; }
+td.td-date { color: var(--gray-400); font-size: 11px; white-space: nowrap; }
+td.td-group {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  color: var(--green-light);
+  width: 30px;
+}
+td.td-match-name { font-weight: 600; font-size: 12px; }
+td.td-result { font-weight: 700; font-size: 13px; color: var(--gold); min-width: 48px; }
+td.td-score { min-width: 52px; font-size: 12px; font-weight: 600; border-radius: 4px; }
+
+.score-exact { background: rgba(39,174,96,0.25); color: #4ddb81; }
+.score-dir   { background: rgba(33,150,243,0.2);  color: #64b5f6; }
+.score-miss  { background: rgba(230,57,70,0.2);   color: #ef9a9a; }
+.score-empty { color: var(--gray-400); }
+
+.pkt-cell { font-weight: 700; font-size: 13px; }
+.pkt-3 { color: #4ddb81; }
+.pkt-1 { color: #64b5f6; }
+.pkt-0 { color: #ef9a9a; }
+.pkt-empty { color: #444; }
+
+/* ── MISTRZ ROW ── */
+.mistrz-section { padding: 16px 20px; max-width: 1600px; margin: 0 auto; }
+.mistrz-table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #333; }
+.mistrz-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+.mistrz-table th { background: linear-gradient(90deg, #1a1000, #0a0a00); padding: 10px 16px; text-align: center; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); border-bottom: 1px solid #333; }
+.mistrz-table td { padding: 10px 16px; text-align: center; border-bottom: 1px solid #1a1a1a; font-weight: 600; }
+.mistrz-team { font-size: 13px; }
+.mistrz-flag { font-size: 20px; }
+
+/* ── INSTRUKCJA ── */
+.instrukcja { padding: 20px; max-width: 900px; margin: 0 auto; display: none; }
+.instrukcja.active { display: block; }
+.instr-card {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.instr-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold); letter-spacing: 2px; margin-bottom: 12px; }
+.instr-card p, .instr-card li { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 6px; }
+.instr-card ol, .instr-card ul { padding-left: 20px; }
+.instr-card code { background: #222; padding: 2px 6px; border-radius: 4px; font-size: 12px; color: var(--gold); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .ranking-grid { grid-template-columns: repeat(2, 1fr); }
+  .tabs { padding: 0 8px; }
+  .tab { padding: 12px 14px; font-size: 11px; }
+}
+
+/* Mobile cards — widoczność sterowana przez JS */
+.mobile-cards { display: none; padding: 0 12px 12px; }
+.mobile-cards.visible { display: block; }
+
+.match-card {
+  background: linear-gradient(135deg, #1a1a1a, #111);
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.match-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px 8px;
+  background: linear-gradient(90deg, #0d1f0d, #0a0a0a);
+  border-bottom: 1px solid #252525;
+}
+.match-card-teams {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  flex: 1;
+  line-height: 1.3;
+}
+.match-card-teams .vs {
+  color: var(--gray-400);
+  font-weight: 400;
+  font-size: 11px;
+  margin: 0 4px;
+}
+.match-card-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+.match-card-grp {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  color: var(--green-light);
+  line-height: 1;
+}
+.match-card-date {
+  font-size: 10px;
+  color: var(--gray-400);
+  white-space: nowrap;
+}
+.match-card-result {
+  text-align: center;
+  padding: 6px 14px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  border-bottom: 1px solid #252525;
+  background: rgba(245,197,24,0.05);
+}
+.match-card-result.no-result {
+  font-size: 12px;
+  color: #444;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
+  padding: 5px 14px;
+}
+.match-card-typy {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: #222;
+}
+.typer-cell {
+  background: #111;
+  padding: 7px 4px;
+  text-align: center;
+}
+.typer-cell-name {
+  font-size: 9px;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.typer-cell-score {
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 2px 4px;
+  display: inline-block;
+  min-width: 36px;
+}
+.typer-cell-pkt {
+  font-size: 10px;
+  margin-top: 2px;
+  font-weight: 700;
+}
+.typer-cell-pkt.p3 { color: #4ddb81; }
+.typer-cell-pkt.p1 { color: #64b5f6; }
+.typer-cell-pkt.p0 { color: #ef9a9a; }
+.typer-cell-pkt.pe { color: #444; }
+
+/* ── GRUPY ── */
+.grupy-section { padding: 16px 20px 24px; max-width: 1600px; margin: 0 auto; display: none; }
+.grupy-section.active { display: block; }
+
+.grupy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.grupa-card {
+  background: linear-gradient(135deg, #1a1a1a, #111);
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.grupa-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(90deg, var(--green-dark), #0a0a0a);
+  border-bottom: 1px solid #333;
+}
+.grupa-letter {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--gold);
+  line-height: 1;
+  width: 24px;
+}
+.grupa-teams-preview {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.5;
+}
+.grupa-row {
+  display: grid;
+  grid-template-columns: 1fr 28px 28px 28px 28px 28px 28px 32px 32px;
+  align-items: center;
+  height: 24px;
+  border-bottom: 1px solid #1a1a1a;
+  font-size: 12px;
+}
+.grupa-row:last-child { border-bottom: none; }
+.grupa-row.awans-1 .grow-team { border-left: 3px solid var(--gold); padding-left: 5px; }
+.grupa-row.awans-2 .grow-team { border-left: 3px solid #4ddb81; padding-left: 5px; }
+.grupa-header-row {
+  display: grid;
+  grid-template-columns: 1fr 28px 28px 28px 28px 28px 28px 32px 32px;
+  align-items: center;
+  height: 20px;
+  border-bottom: 1px solid #222;
+  background: #0f0f0f;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+.grow-team { padding-left: 8px; font-weight: 600; color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.grow-stat { text-align: center; color: rgba(255,255,255,0.8); }
+.grow-stat-hd { text-align: center; }
+.grow-pkt { text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--gold); }
+.grow-diff { text-align: center; color: rgba(255,255,255,0.45); font-size: 11px; }
+.pos-num { display: inline-block; width: 12px; font-size: 9px; color: #555; font-weight: 700; margin-right: 2px; }
+
+@media (max-width: 600px) {
+  .grupy-grid { grid-template-columns: 1fr; }
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+  .grupy-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-trophy">🏆</div>
+  <div class="header-title">Typer MŚ 2026</div>
+  <div class="header-sub">USA · Kanada · Meksyk</div>
+  <div class="header-source">Dane: <a href="#" onclick="return false;">Google Sheets</a> &nbsp;|&nbsp; Aktualizacja: <span id="last-update">—</span></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('ranking')">🏅 Ranking</div>
+  <div class="tab" onclick="switchTab('grupy')">📊 Grupy</div>
+  <div class="tab" onclick="switchTab('kolejka1')">⚽ Kolejka 1</div>
+  <div class="tab" onclick="switchTab('kolejka2')">⚽ Kolejka 2</div>
+  <div class="tab" onclick="switchTab('kolejka3')">⚽ Kolejka 3</div>
+  <div class="tab" onclick="switchTab('mistrz')">👑 Typ na Mistrza</div>
+  <div class="tab" onclick="switchTab('instrukcja')">ℹ️ Instrukcja</div>
+</div>
+
+<!-- RANKING -->
+<div id="tab-ranking" class="ranking-section">
+  <div class="section-title">Ranking graczy</div>
+  <div class="ranking-grid" id="ranking-grid">
+    <div style="color:var(--gray-400); font-size:13px; grid-column:1/-1;">Ładowanie danych...</div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#4ddb81"></div> Dokładny wynik (3 pkt)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#64b5f6"></div> Dobry kierunek (1 pkt)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ef9a9a"></div> Pudło (0 pkt)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Typ na mistrza (5 pkt)</div>
+  </div>
+</div>
+
+<!-- GRUPY -->
+<div id="tab-grupy" class="grupy-section">
+  <div class="section-title">Tabele grup</div>
+  <div class="grupy-grid" id="grupy-grid">
+    <div style="color:var(--gray-400);font-size:13px">Ładowanie...</div>
+  </div>
+</div>
+
+<!-- KOLEJKA 1 -->
+<div id="tab-kolejka1" class="matches-section">
+  <div class="section-title">Kolejka 1 — faza grupowa</div>
+  <div class="table-wrapper" id="tablewrap-k1">
+    <table id="table-k1">
+      <thead id="thead-k1"></thead>
+      <tbody id="tbody-k1"></tbody>
+    </table>
+  </div>
+  <div class="mobile-cards" id="cards-k1"></div>
+</div>
+
+<!-- KOLEJKA 2 -->
+<div id="tab-kolejka2" class="matches-section">
+  <div class="section-title">Kolejka 2 — faza grupowa</div>
+  <div class="table-wrapper" id="tablewrap-k2">
+    <table id="table-k2">
+      <thead id="thead-k2"></thead>
+      <tbody id="tbody-k2"></tbody>
+    </table>
+  </div>
+  <div class="mobile-cards" id="cards-k2"></div>
+</div>
+
+<!-- KOLEJKA 3 -->
+<div id="tab-kolejka3" class="matches-section">
+  <div class="section-title">Kolejka 3 — faza grupowa</div>
+  <div class="table-wrapper" id="tablewrap-k3">
+    <table id="table-k3">
+      <thead id="thead-k3"></thead>
+      <tbody id="tbody-k3"></tbody>
+    </table>
+  </div>
+  <div class="mobile-cards" id="cards-k3"></div>
+</div>
+
+<!-- MISTRZ -->
+<div id="tab-mistrz" class="matches-section">
+  <div class="section-title">Typ na Mistrza</div>
+  <div class="mistrz-section" style="padding:0;">
+    <div class="mistrz-table-wrap">
+      <table class="mistrz-table" id="mistrz-table">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- INSTRUKCJA -->
+<div id="tab-instrukcja" class="instrukcja">
+  <div class="section-title">Instrukcja</div>
+
+  <div class="instr-card">
+    <h3>Zasady punktacji</h3>
+    <ul>
+      <li><strong style="color:#4ddb81">3 punkty</strong> — dokładny wynik (np. typ 2:1, wynik 2:1)</li>
+      <li><strong style="color:#64b5f6">1 punkt</strong> — dobry kierunek (wygrana/remis/porażka się zgadza)</li>
+      <li><strong style="color:#ef9a9a">0 punktów</strong> — pudło</li>
+      <li><strong style="color:var(--gold)">5 punktów</strong> — trafiony mistrz świata</li>
+    </ul>
+  </div>
+
+  <div class="instr-card">
+    <h3>Jak aktualizować dane (Google Sheets)</h3>
+    <ol>
+      <li>Otwórz arkusz Google Sheets (link poniżej)</li>
+      <li>Wpisz typy graczy w kolumnach odpowiednich graczy (format: <code>2:1</code>)</li>
+      <li>Po meczu wpisz wynik w kolumnie <code>WYNIK</code></li>
+      <li>Punktacja aktualizuje się automatycznie</li>
+      <li>Odśwież stronę — wszyscy zobaczą aktualne wyniki</li>
+    </ol>
+  </div>
+
+  <div class="instr-card">
+    <h3>Struktura arkusza Google Sheets</h3>
+    <p>Arkusz musi być publiczny (tylko do odczytu). Kolumny:</p>
+    <ul>
+      <li><code>A</code> — Data i godzina</li>
+      <li><code>B</code> — Grupa</li>
+      <li><code>C</code> — Mecz (np. "Meksyk – RPA")</li>
+      <li><code>D</code> — Kolejka (1/2/3)</li>
+      <li><code>E–L</code> — Typy graczy (w kolejności: Marek, Marta, Mikołaj, Asia, Magda D., Mały, Jakub D., Matylda)</li>
+      <li><code>M</code> — Wynik (wpisujesz Ty po meczu)</li>
+      <li><code>N</code> — Typ na mistrza (osobny wiersz 1 z imionami drużyn)</li>
+    </ul>
+    <p style="margin-top:8px; color:var(--gold)">
+      ⚙️ ID arkusza wpisz w zmiennej <code>SHEET_ID</code> w kodzie strony (linia ~10 w JS).
+    </p>
+  </div>
+
+  <div class="instr-card">
+    <h3>Jak wdrożyć na Netlify Drop</h3>
+    <ol>
+      <li>Pobierz plik <code>typer-ms2026.html</code></li>
+      <li>Otwórz <a href="https://app.netlify.com/drop" target="_blank" style="color:var(--gold)">app.netlify.com/drop</a></li>
+      <li>Przeciągnij plik na stronę</li>
+      <li>Gotowe! Dostajesz link — wyślij graczom</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  KONFIGURACJA — wpisz swoje dane tutaj
+// ══════════════════════════════════════════
+const SHEET_ID = '1WYPPqGwx4r2dlmEegKA2uQJHM7AkL3pu';
+const SHEET_NAME = 'Typy';
+
+const PLAYERS = ['Marek','Marta','Mikołaj','Asia','Magda D.','Mały','Jakub D.','Matylda'];
+
+// ══════════════════════════════════════════
+//  DANE MECZÓW (48 meczów grupowych MŚ 2026)
+// ══════════════════════════════════════════
+const MATCHES = [
+  // KOLEJKA 1
+  {id:1,k:1,date:'11.06',time:'21:00',grp:'A',home:'Meksyk',away:'Afryka Poł.'},
+  {id:2,k:1,date:'12.06',time:'04:00',grp:'A',home:'Korea Płd.',away:'Czechy'},
+  {id:3,k:1,date:'12.06',time:'21:00',grp:'B',home:'Kanada',away:'Bośnia i Herce.'},
+  {id:4,k:1,date:'13.06',time:'03:00',grp:'D',home:'USA',away:'Paragwaj'},
+  {id:5,k:1,date:'13.06',time:'21:00',grp:'B',home:'Katar',away:'Szwajcaria'},
+  {id:6,k:1,date:'14.06',time:'00:00',grp:'C',home:'Brazylia',away:'Maroko'},
+  {id:7,k:1,date:'14.06',time:'03:00',grp:'C',home:'Haiti',away:'Szkocja'},
+  {id:8,k:1,date:'14.06',time:'06:00',grp:'D',home:'Australia',away:'Turcja'},
+  {id:9,k:1,date:'14.06',time:'19:00',grp:'E',home:'Niemcy',away:'Curaçao'},
+  {id:10,k:1,date:'14.06',time:'22:00',grp:'F',home:'Holandia',away:'Japonia'},
+  {id:11,k:1,date:'15.06',time:'01:00',grp:'E',home:'Wybrzeże K.Słon.',away:'Ekwador'},
+  {id:12,k:1,date:'15.06',time:'04:00',grp:'F',home:'Szwecja',away:'Tunezja'},
+  {id:13,k:1,date:'15.06',time:'18:00',grp:'H',home:'Hiszpania',away:'W.Zielonego Przyląd.'},
+  {id:14,k:1,date:'15.06',time:'21:00',grp:'G',home:'Belgia',away:'Egipt'},
+  {id:15,k:1,date:'16.06',time:'00:00',grp:'H',home:'Arabia Saudyjska',away:'Urugwaj'},
+  {id:16,k:1,date:'16.06',time:'03:00',grp:'G',home:'Iran',away:'Nowa Zelandia'},
+  {id:17,k:1,date:'16.06',time:'21:00',grp:'I',home:'Francja',away:'Senegal'},
+  {id:18,k:1,date:'17.06',time:'00:00',grp:'I',home:'Irak',away:'Norwegia'},
+  {id:19,k:1,date:'17.06',time:'03:00',grp:'J',home:'Argentyna',away:'Algieria'},
+  {id:20,k:1,date:'17.06',time:'06:00',grp:'J',home:'Austria',away:'Jordania'},
+  {id:21,k:1,date:'17.06',time:'19:00',grp:'K',home:'Portugalia',away:'DR Kongo'},
+  {id:22,k:1,date:'17.06',time:'22:00',grp:'L',home:'Anglia',away:'Chorwacja'},
+  {id:23,k:1,date:'18.06',time:'01:00',grp:'L',home:'Ghana',away:'Panama'},
+  {id:24,k:1,date:'18.06',time:'04:00',grp:'K',home:'Uzbekistan',away:'Kolumbia'},
+  // KOLEJKA 2
+  {id:25,k:2,date:'19.06',time:'TBD',grp:'A',home:'Meksyk',away:'Korea Płd.'},
+  {id:26,k:2,date:'19.06',time:'TBD',grp:'A',home:'Afryka Poł.',away:'Czechy'},
+  {id:27,k:2,date:'19.06',time:'TBD',grp:'B',home:'Kanada',away:'Katar'},
+  {id:28,k:2,date:'19.06',time:'TBD',grp:'B',home:'Szwajcaria',away:'Bośnia i Herce.'},
+  {id:29,k:2,date:'20.06',time:'TBD',grp:'C',home:'Brazylia',away:'Haiti'},
+  {id:30,k:2,date:'20.06',time:'TBD',grp:'C',home:'Maroko',away:'Szkocja'},
+  {id:31,k:2,date:'20.06',time:'TBD',grp:'D',home:'USA',away:'Australia'},
+  {id:32,k:2,date:'20.06',time:'TBD',grp:'D',home:'Paragwaj',away:'Turcja'},
+  {id:33,k:2,date:'21.06',time:'TBD',grp:'E',home:'Niemcy',away:'Wybrzeże K.Słon.'},
+  {id:34,k:2,date:'21.06',time:'TBD',grp:'E',home:'Ekwador',away:'Curaçao'},
+  {id:35,k:2,date:'21.06',time:'TBD',grp:'F',home:'Holandia',away:'Szwecja'},
+  {id:36,k:2,date:'21.06',time:'TBD',grp:'F',home:'Japonia',away:'Tunezja'},
+  {id:37,k:2,date:'22.06',time:'TBD',grp:'G',home:'Belgia',away:'Iran'},
+  {id:38,k:2,date:'22.06',time:'TBD',grp:'G',home:'Egipt',away:'Nowa Zelandia'},
+  {id:39,k:2,date:'22.06',time:'TBD',grp:'H',home:'Hiszpania',away:'Arabia Saudyjska'},
+  {id:40,k:2,date:'22.06',time:'TBD',grp:'H',home:'W.Zielonego Przyląd.',away:'Urugwaj'},
+  {id:41,k:2,date:'23.06',time:'TBD',grp:'I',home:'Francja',away:'Irak'},
+  {id:42,k:2,date:'23.06',time:'TBD',grp:'I',home:'Senegal',away:'Norwegia'},
+  {id:43,k:2,date:'24.06',time:'TBD',grp:'J',home:'Argentyna',away:'Austria'},
+  {id:44,k:2,date:'24.06',time:'TBD',grp:'J',home:'Algieria',away:'Jordania'},
+  {id:45,k:2,date:'24.06',time:'TBD',grp:'K',home:'Portugalia',away:'Uzbekistan'},
+  {id:46,k:2,date:'24.06',time:'TBD',grp:'K',home:'Kolumbia',away:'DR Kongo'},
+  {id:47,k:2,date:'25.06',time:'TBD',grp:'L',home:'Anglia',away:'Ghana'},
+  {id:48,k:2,date:'25.06',time:'TBD',grp:'L',home:'Chorwacja',away:'Panama'},
+  // KOLEJKA 3
+  {id:49,k:3,date:'26.06',time:'TBD',grp:'A',home:'Korea Płd.',away:'Afryka Poł.'},
+  {id:50,k:3,date:'26.06',time:'TBD',grp:'A',home:'Czechy',away:'Meksyk'},
+  {id:51,k:3,date:'26.06',time:'TBD',grp:'B',home:'Bośnia i Herce.',away:'Katar'},
+  {id:52,k:3,date:'26.06',time:'TBD',grp:'B',home:'Szwajcaria',away:'Kanada'},
+  {id:53,k:3,date:'26.06',time:'TBD',grp:'C',home:'Szkocja',away:'Maroko'},
+  {id:54,k:3,date:'26.06',time:'TBD',grp:'C',home:'Haiti',away:'Brazylia'},
+  {id:55,k:3,date:'26.06',time:'TBD',grp:'D',home:'Turcja',away:'USA'},
+  {id:56,k:3,date:'26.06',time:'TBD',grp:'D',home:'Paragwaj',away:'Australia'},
+  {id:57,k:3,date:'27.06',time:'TBD',grp:'E',home:'Curaçao',away:'Wybrzeże K.Słon.'},
+  {id:58,k:3,date:'27.06',time:'TBD',grp:'E',home:'Ekwador',away:'Niemcy'},
+  {id:59,k:3,date:'27.06',time:'TBD',grp:'F',home:'Tunezja',away:'Holandia'},
+  {id:60,k:3,date:'27.06',time:'TBD',grp:'F',home:'Japonia',away:'Szwecja'},
+  {id:61,k:3,date:'27.06',time:'TBD',grp:'G',home:'Nowa Zelandia',away:'Belgia'},
+  {id:62,k:3,date:'27.06',time:'TBD',grp:'G',home:'Egipt',away:'Iran'},
+  {id:63,k:3,date:'27.06',time:'TBD',grp:'H',home:'Urugwaj',away:'Hiszpania'},
+  {id:64,k:3,date:'27.06',time:'TBD',grp:'H',home:'W.Zielonego Przyląd.',away:'Arabia Saudyjska'},
+  {id:65,k:3,date:'27.06',time:'TBD',grp:'I',home:'Norwegia',away:'Francja'},
+  {id:66,k:3,date:'27.06',time:'TBD',grp:'I',home:'Senegal',away:'Irak'},
+  {id:67,k:3,date:'27.06',time:'TBD',grp:'J',home:'Jordania',away:'Argentyna'},
+  {id:68,k:3,date:'27.06',time:'TBD',grp:'J',home:'Algieria',away:'Austria'},
+  {id:69,k:3,date:'27.06',time:'TBD',grp:'K',home:'DR Kongo',away:'Portugalia'},
+  {id:70,k:3,date:'27.06',time:'TBD',grp:'K',home:'Kolumbia',away:'Uzbekistan'},
+  {id:71,k:3,date:'27.06',time:'TBD',grp:'L',home:'Panama',away:'Anglia'},
+  {id:72,k:3,date:'27.06',time:'TBD',grp:'L',home:'Chorwacja',away:'Ghana'},
+];
+
+// Stan danych załadowanych z Sheets
+let sheetsData = null;
+
+// Funkcja: załaduj z Google Sheets
+async function loadFromSheets() {
+  const PUB_KEY = '2PACX-1vTJ9W1wLsXdSUmwj6WPqjcaGdawdO3tSWbTqTUZa7yjHOy_IvI3LtIc4ceCutx31uKM9FkhY1gF3O_y';
+  const GID = '1555411905';
+  const url = `https://docs.google.com/spreadsheets/d/e/${PUB_KEY}/pub?output=csv&gid=${GID}&single=true`;
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const buf = await r.arrayBuffer();
+    // Google Sheets CSV eksportuje w windows-1252
+    let text;
+    try { text = new TextDecoder('windows-1252').decode(buf); }
+    catch(e) { text = new TextDecoder('utf-8').decode(buf); }
+    sheetsData = parseCSV(text);
+    document.getElementById('last-update').textContent = new Date().toLocaleString('pl-PL');
+    renderAll(sheetsData);
+  } catch(e) {
+    console.error('Błąd ładowania Sheets:', e);
+    document.getElementById('last-update').textContent = 'błąd ładowania';
+    renderAll(null);
+  }
+}
+
+function parseCSV(text) {
+  // CSV z Google Sheets — eksport zakładki "Typy"
+  // Wiersz 1 (ri=0): nagłówki grup — pomijamy
+  // Wiersz 2 (ri=1): imiona graczy — pomijamy
+  // Wiersz 3 (ri=2): TYP NA MISTRZA — col[0]="—", col[5]=wynik_mistrza, col[6..13]=typy graczy
+  // Wiersz 4 (ri=3): separator "KOLEJKA 1" — pomijamy
+  // Wiersze meczu: col[0]=ID liczba, col[5]=WYNIK, col[6..13]=typy graczy
+  const results = {};
+  const types = {};
+  const mistrz = {};
+
+  // Parser CSV obsługujący cudzysłowy
+  const parseRow = line => {
+    const row = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQ = !inQ; continue; }
+      if (ch === ',' && !inQ) { row.push(cur.trim()); cur = ''; continue; }
+      cur += ch;
+    }
+    row.push(cur.trim());
+    return row;
+  };
+
+  const rows = text.split('\n').map(parseRow);
+
+  rows.forEach((cols, ri) => {
+    if (ri < 2) return;
+    if (ri === 2) {
+      mistrz['WINNER'] = (cols[5] || '').trim();
+      PLAYERS.forEach((p, pi) => { mistrz[p] = (cols[6 + pi] || '').trim(); });
+      return;
+    }
+    const matchId = parseInt(cols[0]);
+    if (isNaN(matchId) || matchId <= 0) return;
+    results[matchId] = (cols[5] || '').trim();
+    types[matchId] = {};
+    PLAYERS.forEach((p, pi) => { types[matchId][p] = (cols[6 + pi] || '').trim(); });
+  });
+  return { results, types, mistrz };
+}
+
+// Punktacja
+function calcPoints(typ, wynik) {
+  if (!typ || !wynik) return null;
+  const parseScore = s => { const p = s.split(':'); return [parseInt(p[0]), parseInt(p[1])]; };
+  const t = parseScore(typ); const w = parseScore(wynik);
+  if (isNaN(t[0]) || isNaN(w[0])) return null;
+  if (t[0] === w[0] && t[1] === w[1]) return 3;
+  const td = t[0]-t[1]; const wd = w[0]-w[1];
+  if ((td > 0 && wd > 0) || (td < 0 && wd < 0) || (td === 0 && wd === 0)) return 1;
+  return 0;
+}
+
+function renderAll(data) {
+  renderRanking(data);
+  renderGrupy(data);
+  renderMatchTable('k1', 1, data);
+  renderMatchTable('k2', 2, data);
+  renderMatchTable('k3', 3, data);
+  renderMistrz(data);
+  renderMobileCards('k1', 1, data);
+  renderMobileCards('k2', 2, data);
+  renderMobileCards('k3', 3, data);
+  applyMobileLayout();
+}
+
+function renderGrupy(data) {
+  const grid = document.getElementById('grupy-grid');
+  if (!grid) return;
+
+  // Zbierz wszystkie grupy z meczów
+  const grupy = {};
+  MATCHES.forEach(m => {
+    if (!grupy[m.grp]) grupy[m.grp] = new Set();
+    grupy[m.grp].add(m.home);
+    grupy[m.grp].add(m.away);
+  });
+
+  // Dla każdej grupy policz statystyki drużyn
+  const grupyKeys = Object.keys(grupy).sort();
+
+  grid.innerHTML = grupyKeys.map(grp => {
+    const teams = {};
+    [...grupy[grp]].forEach(t => {
+      teams[t] = { m: 0, w: 0, r: 0, l: 0, gf: 0, ga: 0, pkt: 0 };
+    });
+
+    // Przelicz wyniki meczów tej grupy
+    MATCHES.filter(m => m.grp === grp).forEach(m => {
+      const wynik = data?.results?.[m.id] || '';
+      if (!wynik || !wynik.includes(':')) return;
+      const parts = wynik.split(':');
+      const hg = parseInt(parts[0]);
+      const ag = parseInt(parts[1]);
+      if (isNaN(hg) || isNaN(ag)) return;
+
+      const h = teams[m.home];
+      const a = teams[m.away];
+      if (!h || !a) return;
+
+      h.m++; a.m++;
+      h.gf += hg; h.ga += ag;
+      a.gf += ag; a.ga += hg;
+
+      if (hg > ag) { h.w++; h.pkt += 3; a.l++; }
+      else if (hg < ag) { a.w++; a.pkt += 3; h.l++; }
+      else { h.r++; h.pkt++; a.r++; a.pkt++; }
+    });
+
+    // Posortuj: pkt → różnica bramek → bramki zdobyte → nazwa
+    const sorted = Object.entries(teams).sort(([, a], [, b]) => {
+      if (b.pkt !== a.pkt) return b.pkt - a.pkt;
+      const da = a.gf - a.ga, db = b.gf - b.ga;
+      if (db !== da) return db - da;
+      if (b.gf !== a.gf) return b.gf - a.gf;
+      return 0;
+    });
+
+    const rows = sorted.map(([name, s], i) => {
+      const diff = s.gf - s.ga;
+      const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
+      const posClass = i === 0 ? 'awans-1' : i === 1 ? 'awans-2' : '';
+      return `<div class="grupa-row ${posClass}">
+        <div class="grow-team"><span class="pos-num">${i+1}</span>${name}</div>
+        <div class="grow-stat">${s.m}</div>
+        <div class="grow-stat">${s.w}</div>
+        <div class="grow-stat">${s.r}</div>
+        <div class="grow-stat">${s.l}</div>
+        <div class="grow-stat">${s.gf}</div>
+        <div class="grow-stat">${s.ga}</div>
+        <div class="grow-diff">${s.m > 0 ? diffStr : '—'}</div>
+        <div class="grow-pkt">${s.pkt}</div>
+      </div>`;
+    }).join('');
+
+    return `
+      <div class="grupa-card">
+        <div class="grupa-card-header">
+          <div class="grupa-letter">${grp}</div>
+          <div class="grupa-teams-preview">${sorted.map(([n])=>n).join(' · ')}</div>
+        </div>
+        <div class="grupa-header-row">
+          <div class="grow-team" style="font-size:9px;color:rgba(255,255,255,0.35)">Drużyna</div>
+          <div class="grow-stat-hd">M</div><div class="grow-stat-hd">W</div><div class="grow-stat-hd">R</div><div class="grow-stat-hd">P</div>
+          <div class="grow-stat-hd">G+</div><div class="grow-stat-hd">G-</div><div class="grow-stat-hd">+/-</div><div class="grow-stat-hd">Pkt</div>
+        </div>
+        ${rows}
+      </div>`;
+  }).join('');
+}
+
+function isMobile() {
+  return window.innerWidth < 768 || ('ontouchstart' in window && window.innerWidth < 1024);
+}
+
+function applyMobileLayout() {
+  const mobile = isMobile();
+  ['k1','k2','k3'].forEach(id => {
+    const wrap = document.getElementById(`tablewrap-${id}`);
+    const cards = document.getElementById(`cards-${id}`);
+    if (wrap) wrap.style.display = mobile ? 'none' : '';
+    if (cards) cards.classList.toggle('visible', mobile);
+  });
+}
+
+window.addEventListener('resize', applyMobileLayout);
+
+function renderMobileCards(id, kolejka, data) {
+  const container = document.getElementById(`cards-${id}`);
+  if (!container) return;
+  const matches = MATCHES.filter(m => m.k === kolejka);
+
+  container.innerHTML = matches.map(m => {
+    const wynik = data?.results?.[m.id] || '';
+    const typs = PLAYERS.map(p => data?.types?.[m.id]?.[p] || '');
+    const pkts = typs.map(t => calcPoints(t, wynik));
+
+    const scoreClass = (t, pk) => {
+      if (!t) return 'score-empty';
+      if (pk === 3) return 'score-exact';
+      if (pk === 1) return 'score-dir';
+      if (pk === 0) return 'score-miss';
+      return 'score-empty';
+    };
+    const pktLabel = (pk, t) => {
+      if (pk === 3) return `<div class="typer-cell-pkt p3">3 pkt</div>`;
+      if (pk === 1) return `<div class="typer-cell-pkt p1">1 pkt</div>`;
+      if (pk === 0) return `<div class="typer-cell-pkt p0">0 pkt</div>`;
+      if (t) return `<div class="typer-cell-pkt pe">—</div>`;
+      return `<div class="typer-cell-pkt pe"></div>`;
+    };
+
+    const resultHtml = wynik
+      ? `<div class="match-card-result">${wynik}</div>`
+      : `<div class="match-card-result no-result">brak wyniku</div>`;
+
+    const typerCells = PLAYERS.map((p, i) => `
+      <div class="typer-cell">
+        <div class="typer-cell-name">${p}</div>
+        <div class="typer-cell-score ${scoreClass(typs[i], pkts[i])}">${typs[i] || '—'}</div>
+        ${pktLabel(pkts[i], typs[i])}
+      </div>
+    `).join('');
+
+    return `
+      <div class="match-card">
+        <div class="match-card-header">
+          <div class="match-card-teams">
+            ${m.home}<span class="vs">vs</span>${m.away}
+          </div>
+          <div class="match-card-meta">
+            <div class="match-card-grp">${m.grp}</div>
+            <div class="match-card-date">${m.date}${m.time !== 'TBD' ? ' ' + m.time : ''}</div>
+          </div>
+        </div>
+        ${resultHtml}
+        <div class="match-card-typy">${typerCells}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderRanking(data) {
+  const grid = document.getElementById('ranking-grid');
+  if (!data) {
+    grid.innerHTML = `<div style="color:var(--gray-400);font-size:13px;grid-column:1/-1;padding:20px 0">
+      ⚙️ Skonfiguruj SHEET_ID w kodzie, aby załadować dane z Google Sheets.<br>
+      <span style="color:#555;font-size:11px;margin-top:8px;display:block">Sprawdź zakładkę ℹ️ Instrukcja</span>
+    </div>`;
+    return;
+  }
+
+  const scores = PLAYERS.map(p => {
+    let pts = 0, exact = 0, dir = 0, miss = 0;
+    MATCHES.forEach(m => {
+      const typ = data.types[m.id]?.[p] || '';
+      const wynik = data.results[m.id] || '';
+      const pk = calcPoints(typ, wynik);
+      if (pk === 3) { pts += 3; exact++; }
+      else if (pk === 1) { pts += 1; dir++; }
+      else if (pk === 0) { miss++; }
+    });
+    const mistrzTyp = data.mistrz?.[p] || '';
+    const mistrzWynik = data.mistrz?.['WINNER'] || '';
+    if (mistrzTyp && mistrzWynik && mistrzTyp === mistrzWynik) pts += 5;
+    return { p, pts, exact, dir, miss, mistrzTyp };
+  }).sort((a,b) => b.pts - a.pts);
+
+  const medals = ['🥇','🥈','🥉'];
+  grid.innerHTML = scores.map((s, i) => `
+    <div class="rank-card rank-${i+1}">
+      <div class="rank-pos">${i+1}</div>
+      <div class="rank-medal">${medals[i] || '🏅'}</div>
+      <div class="rank-name">${s.p}</div>
+      <div class="rank-pts">${s.pts}</div>
+      <div class="rank-pts-label">punktów</div>
+      <div class="rank-breakdown">
+        <div class="rank-stat"><span>${s.exact}</span> ×3</div>
+        <div class="rank-stat"><span>${s.dir}</span> ×1</div>
+        <div class="rank-stat"><span>${s.miss}</span> ×0</div>
+      </div>
+      ${s.mistrzTyp ? `<div class="rank-mistrz">👑 ${s.mistrzTyp}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function buildthead(id) {
+  const thead = document.getElementById(`thead-${id}`);
+  thead.innerHTML = `<tr>
+    <th class="th-match">Mecz</th>
+    <th>Data</th>
+    <th>Gr.</th>
+    ${PLAYERS.map(p=>`<th class="th-typer th-group-typy">${p}</th>`).join('')}
+    <th style="background:#1a1000;color:var(--gold)">Wynik</th>
+    ${PLAYERS.map(p=>`<th class="th-typer th-group-pkt">${p}</th>`).join('')}
+  </tr>`;
+}
+
+function renderMatchTable(id, kolejka, data) {
+  buildthead(id);
+  const tbody = document.getElementById(`tbody-${id}`);
+  const matches = MATCHES.filter(m => m.k === kolejka);
+  tbody.innerHTML = matches.map(m => {
+    const wynik = data?.results?.[m.id] || '';
+    const typs = PLAYERS.map(p => data?.types?.[m.id]?.[p] || '');
+    const pkts = typs.map(t => calcPoints(t, wynik));
+
+    const scoreClass = (t, pk) => {
+      if (!t) return 'score-empty';
+      if (pk === 3) return 'score-exact';
+      if (pk === 1) return 'score-dir';
+      if (pk === 0) return 'score-miss';
+      return 'score-empty';
+    };
+    const pktClass = (pk) => {
+      if (pk === null) return 'pkt-empty';
+      if (pk === 3) return 'pkt-3';
+      if (pk === 1) return 'pkt-1';
+      return 'pkt-0';
+    };
+
+    return `<tr>
+      <td class="td-match"><span style="color:var(--gray-400);font-size:10px;margin-right:4px">${m.grp}</span><strong>${m.home}</strong> – <strong>${m.away}</strong></td>
+      <td class="td-date">${m.date}<br><span style="color:#555">${m.time}</span></td>
+      <td class="td-group">${m.grp}</td>
+      ${typs.map((t,i) => `<td class="td-score ${scoreClass(t, pkts[i])}">${t || '—'}</td>`).join('')}
+      <td class="td-result">${wynik || '—'}</td>
+      ${pkts.map((pk,i) => `<td class="pkt-cell ${pktClass(pk)}">${pk !== null ? pk : (typs[i] ? '—' : '')}</td>`).join('')}
+    </tr>`;
+  }).join('');
+}
+
+function renderMistrz(data) {
+  const table = document.getElementById('mistrz-table');
+  const thead = table.querySelector('thead');
+  const tbody = table.querySelector('tbody');
+
+  thead.innerHTML = `<tr>
+    <th>Gracz</th>
+    <th>Typ na Mistrza</th>
+    <th>Wynik</th>
+  </tr>`;
+
+  if (!data) {
+    tbody.innerHTML = `<tr><td colspan="3" style="color:var(--gray-400);padding:20px">Brak danych</td></tr>`;
+    return;
+  }
+  const winner = data.mistrz?.['WINNER'] || '';
+  tbody.innerHTML = PLAYERS.map(p => {
+    const typ = data.mistrz?.[p] || '—';
+    const hit = winner && typ === winner;
+    return `<tr>
+      <td style="font-weight:700">${p}</td>
+      <td class="mistrz-team" style="${hit ? 'color:var(--gold)' : ''}">${typ}</td>
+      <td>${hit ? '<span style="color:var(--gold);font-weight:700">+5 pkt ✓</span>' : (winner ? '0 pkt' : '—')}</td>
+    </tr>`;
+  }).join('');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['ranking','grupy','kolejka1','kolejka2','kolejka3','mistrz','instrukcja'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  ['ranking','grupy','kolejka1','kolejka2','kolejka3','mistrz','instrukcja'].forEach(n => {
+    const el = document.getElementById(`tab-${n}`);
+    if (el) {
+      el.style.display = n === name ? 'block' : 'none';
+      if (el.classList.contains('matches-section') || el.classList.contains('instrukcja') || el.classList.contains('grupy-section')) {
+        el.classList.toggle('active', n === name);
+      }
+    }
+  });
+}
+
+// Init
+loadFromSheets();
+setInterval(loadFromSheets, 5 * 60 * 1000);
+</script>
+</body>
+</html>
