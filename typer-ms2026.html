@@ -588,44 +588,6 @@ td.td-score { min-width: 26px; font-size: 10px; font-weight: 600; border-radius:
       <li><strong style="color:var(--gold)">5 punktów</strong> — trafiony mistrz świata</li>
     </ul>
   </div>
-
-  <div class="instr-card">
-    <h3>Jak aktualizować dane (Google Sheets)</h3>
-    <ol>
-      <li>Otwórz arkusz Google Sheets (link poniżej)</li>
-      <li>Wpisz typy graczy w kolumnach odpowiednich graczy (format: <code>2:1</code>)</li>
-      <li>Po meczu wpisz wynik w kolumnie <code>WYNIK</code></li>
-      <li>Punktacja aktualizuje się automatycznie</li>
-      <li>Odśwież stronę — wszyscy zobaczą aktualne wyniki</li>
-    </ol>
-  </div>
-
-  <div class="instr-card">
-    <h3>Struktura arkusza Google Sheets</h3>
-    <p>Arkusz musi być publiczny (tylko do odczytu). Kolumny:</p>
-    <ul>
-      <li><code>A</code> — Data i godzina</li>
-      <li><code>B</code> — Grupa</li>
-      <li><code>C</code> — Mecz (np. "Meksyk – RPA")</li>
-      <li><code>D</code> — Kolejka (1/2/3)</li>
-      <li><code>E–L</code> — Typy graczy (w kolejności: Marek, Marta, Mikołaj, Asia, Magda D., Mały, Jakub D., Matylda)</li>
-      <li><code>M</code> — Wynik (wpisujesz Ty po meczu)</li>
-      <li><code>N</code> — Typ na mistrza (osobny wiersz 1 z imionami drużyn)</li>
-    </ul>
-    <p style="margin-top:8px; color:var(--gold)">
-      ⚙️ ID arkusza wpisz w zmiennej <code>SHEET_ID</code> w kodzie strony (linia ~10 w JS).
-    </p>
-  </div>
-
-  <div class="instr-card">
-    <h3>Jak wdrożyć na Netlify Drop</h3>
-    <ol>
-      <li>Pobierz plik <code>typer-ms2026.html</code></li>
-      <li>Otwórz <a href="https://app.netlify.com/drop" target="_blank" style="color:var(--gold)">app.netlify.com/drop</a></li>
-      <li>Przeciągnij plik na stronę</li>
-      <li>Gotowe! Dostajesz link — wyślij graczom</li>
-    </ol>
-  </div>
 </div>
 
 <script>
