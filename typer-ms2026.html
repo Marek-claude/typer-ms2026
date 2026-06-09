@@ -449,16 +449,16 @@ td.td-score { min-width: 52px; font-size: 12px; font-weight: 600; border-radius:
   line-height: 1.5;
 }
 .grupa-table-wrap { }
-.grupa-table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+.grupa-table { border-collapse: collapse; width: 100%; }
 .grupa-table th, .grupa-table td {
-  height: 20px;
-  padding: 0 2px;
-  white-space: nowrap;
+  height: 22px;
+  padding: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .grupa-table th {
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
   color: rgba(255,255,255,0.35);
@@ -466,29 +466,16 @@ td.td-score { min-width: 52px; font-size: 12px; font-weight: 600; border-radius:
   background: #0f0f0f;
   text-align: center;
 }
-.grupa-table th.th-team { text-align: left; }
-.grupa-table td {
-  font-size: 13px;
-  border-bottom: 1px solid #1a1a1a;
-  color: rgba(255,255,255,0.8);
-  text-align: center;
-}
-.grupa-table td.td-team {
-  text-align: left;
-  font-weight: 600;
-  color: var(--white);
-}
-/* Szerokości kolumn */
-.grupa-table col.col-team { width: 45px; }
-.grupa-table col.col-stat { width: 5px; }
-
-.grupa-table td.td-pkt { font-family: 'Bebas Neue', sans-serif; font-size: 13px; color: var(--gold); }
+.grupa-table th.th-team { text-align: left; padding-left: 8px; width: 150px; }
+.grupa-table th.th-stat { width: 28px; }
+.grupa-table td { font-size: 12px; border-bottom: 1px solid #1a1a1a; color: rgba(255,255,255,0.8); text-align: center; }
+.grupa-table td.td-team { text-align: left; padding-left: 8px; font-weight: 600; color: var(--white); }
+.grupa-table td.td-pkt { font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--gold); }
 .grupa-table td.td-diff { color: rgba(255,255,255,0.45); }
 .grupa-table tr:last-child td { border-bottom: none; }
-.grupa-table tr.awans-1 td.td-team { border-left: 3px solid var(--gold); padding-left: 7px; }
-.grupa-table tr.awans-2 td.td-team { border-left: 3px solid #4ddb81; padding-left: 7px; }
+.grupa-table tr.awans-1 td.td-team { border-left: 3px solid var(--gold); padding-left: 5px; }
+.grupa-table tr.awans-2 td.td-team { border-left: 3px solid #4ddb81; padding-left: 5px; }
 .pos-num { display: inline-block; width: 12px; font-size: 9px; color: #555; font-weight: 700; margin-right: 2px; }
-.grupa-table { width: 100%; border-collapse: collapse; }
 
 @media (max-width: 600px) {
   .grupy-grid { grid-template-columns: 1fr; }
@@ -903,15 +890,10 @@ function renderGrupy(data) {
         </div>
         <div class="grupa-table-wrap">
         <table class="grupa-table">
-          <colgroup>
-            <col class="col-team">
-            <col class="col-stat"><col class="col-stat"><col class="col-stat"><col class="col-stat">
-            <col class="col-stat"><col class="col-stat"><col class="col-stat"><col class="col-stat">
-          </colgroup>
           <thead><tr>
             <th class="th-team">Drużyna</th>
-            <th>M</th><th>W</th><th>R</th><th>P</th>
-            <th>G+</th><th>G-</th><th>+/-</th><th>Pkt</th>
+            <th class="th-stat">M</th><th class="th-stat">W</th><th class="th-stat">R</th><th class="th-stat">P</th>
+            <th class="th-stat">G+</th><th class="th-stat">G-</th><th class="th-stat">+/-</th><th class="th-stat">Pkt</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
