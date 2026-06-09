@@ -991,51 +991,6 @@ function renderMobileCards(id, kolejka, data) {
   }).join('');
 }
 
-    const scoreClass = (t, pk) => {
-      if (!t) return 'score-empty';
-      if (pk === 3) return 'score-exact';
-      if (pk === 1) return 'score-dir';
-      if (pk === 0) return 'score-miss';
-      return 'score-empty';
-    };
-    const pktLabel = (pk, t) => {
-      if (pk === 3) return `<div class="typer-cell-pkt p3">3 pkt</div>`;
-      if (pk === 1) return `<div class="typer-cell-pkt p1">1 pkt</div>`;
-      if (pk === 0) return `<div class="typer-cell-pkt p0">0 pkt</div>`;
-      if (t) return `<div class="typer-cell-pkt pe">—</div>`;
-      return `<div class="typer-cell-pkt pe"></div>`;
-    };
-
-    const resultHtml = wynik
-      ? `<div class="match-card-result">${wynik}</div>`
-      : `<div class="match-card-result no-result">brak wyniku</div>`;
-
-    const typerCells = PLAYERS.map((p, i) => `
-      <div class="typer-cell">
-        <div class="typer-cell-name">${p}</div>
-        <div class="typer-cell-score ${scoreClass(typs[i], pkts[i])}">${typs[i] || '—'}</div>
-        ${pktLabel(pkts[i], typs[i])}
-      </div>
-    `).join('');
-
-    return `
-      <div class="match-card">
-        <div class="match-card-header">
-          <div class="match-card-teams">
-            ${m.home}<span class="vs">vs</span>${m.away}
-          </div>
-          <div class="match-card-meta">
-            <div class="match-card-grp">${m.grp}</div>
-            <div class="match-card-date">${m.date}${m.time !== 'TBD' ? ' ' + m.time : ''}</div>
-          </div>
-        </div>
-        ${resultHtml}
-        <div class="match-card-typy">${typerCells}</div>
-      </div>
-    `;
-  }).join('');
-}
-
 function renderRanking(data) {
   const grid = document.getElementById('ranking-grid');
   if (!data) {
