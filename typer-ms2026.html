@@ -258,7 +258,7 @@ td.td-group {
   width: 30px;
 }
 td.td-match-name { font-weight: 600; font-size: 11px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-td.td-result { font-weight: 700; font-size: 11px; color: var(--gold); min-width: 32px; }
+td.td-result { font-weight: 700; font-size: 11px; color: var(--gold); width: 46px; min-width: 46px; max-width: 46px; }
 td.td-score { width: 46px; min-width: 46px; max-width: 46px; font-size: 10px; font-weight: 600; border-radius: 4px; padding: 2px 2px; border-left: 1px solid #1e1e1e; }
 
 .score-exact { background: rgba(39,174,96,0.25); color: #4ddb81; }
@@ -1002,7 +1002,7 @@ function buildthead(id) {
     <th>Data</th>
     <th>Gr.</th>
     ${PLAYERS.map(p=>`<th class="th-typer th-group-typy">${p}</th>`).join('')}
-    <th style="background:#1a1000;color:var(--gold)">Wynik</th>
+    <th style="background:#1a1000;color:var(--gold);width:46px;min-width:46px;max-width:46px;">Wynik</th>
     ${PLAYERS.map(p=>`<th class="th-typer th-group-pkt">${p}</th>`).join('')}
   </tr>`;
 }
