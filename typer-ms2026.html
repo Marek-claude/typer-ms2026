@@ -448,33 +448,34 @@ td.td-score { min-width: 52px; font-size: 12px; font-weight: 600; border-radius:
   color: rgba(255,255,255,0.4);
   line-height: 1.5;
 }
-.grupa-table-wrap { display: block; }
-.grupa-table { border-collapse: collapse; }
-.grupa-table th, .grupa-table td {
-  height: 22px;
-  padding: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.grupa-row {
+  display: grid;
+  grid-template-columns: 1fr 26px 26px 26px 26px 26px 26px 32px 32px;
+  align-items: center;
+  height: 24px;
+  border-bottom: 1px solid #1a1a1a;
+  font-size: 12px;
 }
-.grupa-table th {
+.grupa-row:last-child { border-bottom: none; }
+.grupa-row.awans-1 .grow-team { border-left: 3px solid var(--gold); padding-left: 5px; }
+.grupa-row.awans-2 .grow-team { border-left: 3px solid #4ddb81; padding-left: 5px; }
+.grupa-header-row {
+  display: grid;
+  grid-template-columns: 1fr 26px 26px 26px 26px 26px 26px 32px 32px;
+  align-items: center;
+  height: 20px;
+  border-bottom: 1px solid #222;
+  background: #0f0f0f;
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
   color: rgba(255,255,255,0.35);
-  border-bottom: 1px solid #222;
-  background: #0f0f0f;
-  text-align: center;
 }
-.grupa-table th.th-team { text-align: left; padding-left: 8px; width: 120px; min-width: 120px; max-width: 120px; }
-.grupa-table th.th-stat { width: 26px; min-width: 26px; max-width: 26px; }
-.grupa-table td { font-size: 12px; border-bottom: 1px solid #1a1a1a; color: rgba(255,255,255,0.8); text-align: center; }
-.grupa-table td.td-team { text-align: left; padding-left: 8px; font-weight: 600; color: var(--white); max-width: 120px; }
-.grupa-table td.td-pkt { font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--gold); }
-.grupa-table td.td-diff { color: rgba(255,255,255,0.45); }
-.grupa-table tr:last-child td { border-bottom: none; }
-.grupa-table tr.awans-1 td.td-team { border-left: 3px solid var(--gold); padding-left: 5px; }
-.grupa-table tr.awans-2 td.td-team { border-left: 3px solid #4ddb81; padding-left: 5px; }
+.grow-team { padding-left: 8px; font-weight: 600; color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.grow-stat { text-align: center; color: rgba(255,255,255,0.8); }
+.grow-stat-hd { text-align: center; }
+.grow-pkt { text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--gold); }
+.grow-diff { text-align: center; color: rgba(255,255,255,0.45); font-size: 11px; }
 .pos-num { display: inline-block; width: 12px; font-size: 9px; color: #555; font-weight: 700; margin-right: 2px; }
 
 @media (max-width: 600px) {
@@ -869,17 +870,17 @@ function renderGrupy(data) {
       const diff = s.gf - s.ga;
       const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
       const posClass = i === 0 ? 'awans-1' : i === 1 ? 'awans-2' : '';
-      return `<tr class="${posClass}">
-        <td class="td-team"><span class="pos-num">${i+1}</span>${name}</td>
-        <td>${s.m}</td>
-        <td>${s.w}</td>
-        <td>${s.r}</td>
-        <td>${s.l}</td>
-        <td>${s.gf}</td>
-        <td>${s.ga}</td>
-        <td class="td-diff">${s.m > 0 ? diffStr : '—'}</td>
-        <td class="td-pkt">${s.pkt}</td>
-      </tr>`;
+      return `<div class="grupa-row ${posClass}">
+        <div class="grow-team"><span class="pos-num">${i+1}</span>${name}</div>
+        <div class="grow-stat">${s.m}</div>
+        <div class="grow-stat">${s.w}</div>
+        <div class="grow-stat">${s.r}</div>
+        <div class="grow-stat">${s.l}</div>
+        <div class="grow-stat">${s.gf}</div>
+        <div class="grow-stat">${s.ga}</div>
+        <div class="grow-diff">${s.m > 0 ? diffStr : '—'}</div>
+        <div class="grow-pkt">${s.pkt}</div>
+      </div>`;
     }).join('');
 
     return `
@@ -888,16 +889,12 @@ function renderGrupy(data) {
           <div class="grupa-letter">${grp}</div>
           <div class="grupa-teams-preview">${sorted.map(([n])=>n).join(' · ')}</div>
         </div>
-        <div class="grupa-table-wrap">
-        <table class="grupa-table">
-          <thead><tr>
-            <th class="th-team">Drużyna</th>
-            <th class="th-stat">M</th><th class="th-stat">W</th><th class="th-stat">R</th><th class="th-stat">P</th>
-            <th class="th-stat">G+</th><th class="th-stat">G-</th><th class="th-stat">+/-</th><th class="th-stat">Pkt</th>
-          </tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
+        <div class="grupa-header-row">
+          <div class="grow-team" style="font-size:9px;color:rgba(255,255,255,0.35)">Drużyna</div>
+          <div class="grow-stat-hd">M</div><div class="grow-stat-hd">W</div><div class="grow-stat-hd">R</div><div class="grow-stat-hd">P</div>
+          <div class="grow-stat-hd">G+</div><div class="grow-stat-hd">G-</div><div class="grow-stat-hd">+/-</div><div class="grow-stat-hd">Pkt</div>
         </div>
+        ${rows}
       </div>`;
   }).join('');
 }
