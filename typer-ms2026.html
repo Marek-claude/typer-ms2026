@@ -639,7 +639,7 @@ td.td-score { min-width: 52px; font-size: 12px; font-weight: 600; border-radius:
 const SHEET_ID = '1WYPPqGwx4r2dlmEegKA2uQJHM7AkL3pu';
 const SHEET_NAME = 'Typy';
 
-const PLAYERS = ['Marek','Marta','Mikołaj','Asia','Magda D.','Mały','Jakub D.','Matylda'];
+const PLAYERS = ['Marek','Marta','Mikołaj','Asia','Magda D.','Mały','Jakub D.','Matylda','Dominika','Piotr M.'];
 
 // ══════════════════════════════════════════
 //  DANE MECZÓW (48 meczów grupowych MŚ 2026)
@@ -970,7 +970,7 @@ function renderMobileCards(id, kolejka, data) {
     const typerCells = PLAYERS.map((p, i) => `
       <div class="typer-cell">
         <div class="typer-cell-name">${p}</div>
-        <div class="typer-cell-score ${scoreClass(typs[i], pkts[i])}">${odblokowana ? (typs[i] || '—') : '🔒'}</div>
+        <div class="typer-cell-score ${scoreClass(typs[i], pkts[i])}">${odblokowana ? (typs[i] || '—') : 'x'}</div>
         ${pktLabel(pkts[i], typs[i])}
       </div>
     `).join('');
@@ -1073,7 +1073,7 @@ function renderMatchTable(id, kolejka, data) {
       return 'pkt-0';
     };
 
-    const typDisplay = (t) => odblokowana ? (t || '—') : '🔒';
+    const typDisplay = (t) => odblokowana ? (t || '—') : 'x';
 
     return `<tr>
       <td class="td-match"><span style="color:var(--gray-400);font-size:10px;margin-right:4px">${m.grp}</span><strong>${m.home}</strong> – <strong>${m.away}</strong></td>
