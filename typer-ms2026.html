@@ -230,7 +230,7 @@ thead th {
   background: #0d1f0d;
 }
 tbody td { position: relative; z-index: 1; }
-thead th.th-match { text-align: left; min-width: 100px; vertical-align: middle; }
+thead th.th-match { text-align: left; width: 160px; max-width: 160px; vertical-align: middle; }
 thead th.th-typer { min-width: 26px; font-size: 11px; padding: 10px 1px; vertical-align: middle; }
 
 .th-group-typy {
@@ -250,14 +250,14 @@ tbody tr.round-sep { border-top: 2px solid #333; }
 
 td { padding: 7px 8px; text-align: center; vertical-align: middle; }
 td.td-match { text-align: left; padding-left: 12px; }
-td.td-date { color: var(--gray-400); font-size: 10px; white-space: nowrap; width: 26px; padding: 0; }
+td.td-date { color: var(--gray-400); font-size: 10px; white-space: nowrap; width: 20px; padding: 0 4px; }
 td.td-group {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 16px;
   color: var(--green-light);
   width: 30px;
 }
-td.td-match-name { font-weight: 600; font-size: 12px; }
+td.td-match-name { font-weight: 600; font-size: 12px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 td.td-result { font-weight: 700; font-size: 11px; color: var(--gold); min-width: 32px; }
 td.td-score { min-width: 26px; font-size: 10px; font-weight: 600; border-radius: 4px; padding: 2px 1px; }
 
