@@ -977,12 +977,25 @@ function renderRanking(data) {
     return { p, pts, exact, dir, miss, mistrzTyp };
   }).sort((a,b) => b.pts - a.pts);
 
+  // Strzałki — porównaj z poprzednim rankingiem
+  const prevRanking = JSON.parse(sessionStorage.getItem('prevRanking') || '{}');
+  const currRanking = {};
+  scores.forEach((s, i) => currRanking[s.p] = i + 1);
+  sessionStorage.setItem('prevRanking', JSON.stringify(currRanking));
+
+  const arrow = (p, i) => {
+    const prev = prevRanking[p];
+    if (!prev || prev === i + 1) return '';
+    if (prev > i + 1) return '<span style="color:#4ddb81;font-size:12px;margin-left:4px">↑</span>';
+    return '<span style="color:#ef9a9a;font-size:12px;margin-left:4px">↓</span>';
+  };
+
   const medals = ['🥇','🥈','🥉'];
   grid.innerHTML = scores.map((s, i) => `
     <div class="rank-card rank-${i+1}">
       <div class="rank-pos">${i+1}</div>
       <div class="rank-medal">${medals[i] || '🏅'}</div>
-      <div class="rank-name">${s.p}</div>
+      <div class="rank-name">${s.p}${arrow(s.p, i)}</div>
       <div class="rank-pts">${s.pts}</div>
       <div class="rank-pts-label">punktów</div>
       <div class="rank-breakdown">
