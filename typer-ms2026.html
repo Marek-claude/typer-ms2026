@@ -482,6 +482,76 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
 @media (min-width: 601px) and (max-width: 1024px) {
   .grupy-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── ODLICZANIE ── */
+.countdown-bar {
+  background: linear-gradient(90deg, #0d1f0d, #0a0a0a);
+  border-bottom: 1px solid #1a2a1a;
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+}
+.countdown-bar .cd-label { }
+.countdown-bar .cd-time {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+.countdown-bar .cd-match {
+  color: rgba(255,255,255,0.7);
+  font-size: 11px;
+}
+
+/* ── STATYSTYKI ── */
+.stats-section { padding: 16px 20px 24px; max-width: 1200px; margin: 0 auto; display: none; }
+.stats-section.active { display: block; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 16px; }
+.stats-card {
+  background: linear-gradient(135deg, #1a1a1a, #111);
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 16px;
+}
+.stats-card h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  color: var(--gold);
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #222;
+  padding-bottom: 8px;
+}
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #1a1a1a;
+  font-size: 12px;
+}
+.stats-row:last-child { border-bottom: none; }
+.stats-row .sr-name { color: var(--white); font-weight: 600; }
+.stats-row .sr-val { color: var(--gold); font-family: 'Bebas Neue', sans-serif; font-size: 16px; }
+.stats-row .sr-bar {
+  height: 4px;
+  background: #222;
+  border-radius: 2px;
+  flex: 1;
+  margin: 0 8px;
+}
+.stats-row .sr-bar-fill {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--green-light);
+}
+@media (max-width: 600px) {
+  .stats-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -493,6 +563,13 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
   <div class="header-source">Dane: <a href="#" onclick="return false;">Google Sheets</a> &nbsp;|&nbsp; Aktualizacja: <span id="last-update">—</span></div>
 </div>
 
+<div class="countdown-bar" id="countdown-bar">
+  <span class="cd-label">⏱ Następny mecz:</span>
+  <span class="cd-match" id="cd-match">—</span>
+  <span class="cd-label">za</span>
+  <span class="cd-time" id="cd-time">—</span>
+</div>
+
 <div class="tabs">
   <div class="tab active" onclick="switchTab('ranking')">🏅 Ranking</div>
   <div class="tab" onclick="switchTab('grupy')">📊 Grupy</div>
@@ -500,6 +577,7 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
   <div class="tab" onclick="switchTab('kolejka2')">⚽ Kolejka 2</div>
   <div class="tab" onclick="switchTab('kolejka3')">⚽ Kolejka 3</div>
   <div class="tab" onclick="switchTab('mistrz')">👑 Typ na Mistrza</div>
+  <div class="tab" onclick="switchTab('statystyki')">📈 Statystyki</div>
   <div class="tab" onclick="switchTab('instrukcja')">ℹ️ Instrukcja</div>
 </div>
 
@@ -572,6 +650,14 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
         <tbody></tbody>
       </table>
     </div>
+  </div>
+</div>
+
+<!-- STATYSTYKI -->
+<div id="tab-statystyki" class="stats-section">
+  <div class="section-title">Statystyki</div>
+  <div class="stats-grid" id="stats-grid">
+    <div style="color:var(--gray-400);font-size:13px">Ładowanie...</div>
   </div>
 </div>
 
@@ -789,6 +875,7 @@ function renderAll(data) {
   renderMobileCards('k1', 1, data);
   renderMobileCards('k2', 2, data);
   renderMobileCards('k3', 3, data);
+  renderStatystyki(data);
   applyMobileLayout();
 }
 
@@ -849,7 +936,7 @@ function renderGrupy(data) {
       const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
       const posClass = i === 0 ? 'awans-1' : i === 1 ? 'awans-2' : '';
       return `<div class="grupa-row ${posClass}">
-        <div class="grow-team"><span class="pos-num">${i+1}</span>${name}</div>
+        <div class="grow-team"><span class="pos-num">${i+1}</span>${flag(name)}${name}</div>
         <div class="grow-stat">${s.m}</div>
         <div class="grow-stat">${s.w}</div>
         <div class="grow-stat">${s.r}</div>
@@ -1086,23 +1173,139 @@ function renderMistrz(data) {
 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t,i) => {
-    const names = ['ranking','grupy','kolejka1','kolejka2','kolejka3','mistrz','instrukcja'];
+    const names = ['ranking','grupy','kolejka1','kolejka2','kolejka3','mistrz','statystyki','instrukcja'];
     t.classList.toggle('active', names[i] === name);
   });
-  ['ranking','grupy','kolejka1','kolejka2','kolejka3','mistrz','instrukcja'].forEach(n => {
+  ['ranking','grupy','kolejka1','kolejka2','kolejka3','mistrz','statystyki','instrukcja'].forEach(n => {
     const el = document.getElementById(`tab-${n}`);
     if (el) {
       el.style.display = n === name ? 'block' : 'none';
-      if (el.classList.contains('matches-section') || el.classList.contains('instrukcja') || el.classList.contains('grupy-section')) {
+      if (el.classList.contains('matches-section') || el.classList.contains('instrukcja') || el.classList.contains('grupy-section') || el.classList.contains('stats-section')) {
         el.classList.toggle('active', n === name);
       }
     }
   });
 }
 
+// ── FLAGI ──
+const FLAGS = {
+  'Meksyk':'🇲🇽','RPA':'🇿🇦','Korea Płd.':'🇰🇷','Czechy':'🇨🇿',
+  'Kanada':'🇨🇦','Bośnia i Herce.':'🇧🇦','Katar':'🇶🇦','Szwajcaria':'🇨🇭',
+  'Brazylia':'🇧🇷','Maroko':'🇲🇦','Haiti':'🇭🇹','Szkocja':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'USA':'🇺🇸','Paragwaj':'🇵🇾','Australia':'🇦🇺','Turcja':'🇹🇷',
+  'Niemcy':'🇩🇪','Curaçao':'🇨🇼','Wybrzeże K.Słon.':'🇨🇮','Ekwador':'🇪🇨',
+  'Holandia':'🇳🇱','Japonia':'🇯🇵','Szwecja':'🇸🇪','Tunezja':'🇹🇳',
+  'Hiszpania':'🇪🇸','W.Zielonego Przyląd.':'🇨🇻','Belgia':'🇧🇪','Egipt':'🇪🇬',
+  'Arabia Saudyjska':'🇸🇦','Urugwaj':'🇺🇾','Iran':'🇮🇷','Nowa Zelandia':'🇳🇿',
+  'Francja':'🇫🇷','Senegal':'🇸🇳','Irak':'🇮🇶','Norwegia':'🇳🇴',
+  'Argentyna':'🇦🇷','Algieria':'🇩🇿','Austria':'🇦🇹','Jordania':'🇯🇴',
+  'Portugalia':'🇵🇹','DR Kongo':'🇨🇩','Uzbekistan':'🇺🇿','Kolumbia':'🇨🇴',
+  'Anglia':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Chorwacja':'🇭🇷','Ghana':'🇬🇭','Panama':'🇵🇦'
+};
+
+function flag(name) { return FLAGS[name] ? FLAGS[name] + ' ' : ''; }
+
+// ── ODLICZANIE ──
+function startCountdown() {
+  function update() {
+    const now = new Date();
+    let next = null;
+    MATCHES.forEach(m => {
+      if (m.time === 'TBD') return;
+      const [dd, mm] = m.date.split('.');
+      const [hh, mi] = m.time.split(':');
+      const t = new Date(2026, parseInt(mm)-1, parseInt(dd), parseInt(hh), parseInt(mi));
+      if (t > now && (!next || t < next.t)) next = { t, m };
+    });
+
+    if (!next) {
+      document.getElementById('countdown-bar').style.display = 'none';
+      return;
+    }
+
+    const diff = next.t - now;
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+
+    const timeStr = days > 0
+      ? `${days}d ${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`
+      : `${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+
+    document.getElementById('cd-match').textContent = `${next.m.home} – ${next.m.away}`;
+    document.getElementById('cd-time').textContent = timeStr;
+  }
+  update();
+  setInterval(update, 1000);
+}
+
+// ── STATYSTYKI ──
+function renderStatystyki(data) {
+  const grid = document.getElementById('stats-grid');
+  if (!grid) return;
+  if (!data) { grid.innerHTML = '<div style="color:var(--gray-400)">Brak danych</div>'; return; }
+
+  const scores = PLAYERS.map(p => {
+    let pts = 0, exact = 0, dir = 0, miss = 0, typed = 0;
+    MATCHES.forEach(m => {
+      const typ = data.types[m.id]?.[p] || '';
+      const wynik = data.results[m.id] || '';
+      if (!typ) return;
+      typed++;
+      const pk = calcPoints(typ, wynik);
+      if (pk === 3) { pts += 3; exact++; }
+      else if (pk === 1) { pts += 1; dir++; }
+      else if (wynik) { miss++; }
+    });
+    const pct = typed > 0 ? Math.round((exact + dir) / Math.max(1, exact + dir + miss) * 100) : 0;
+    return { p, pts, exact, dir, miss, typed, pct };
+  }).sort((a,b) => b.pts - a.pts);
+
+  const maxPts = Math.max(...scores.map(s => s.pts), 1);
+  const maxExact = Math.max(...scores.map(s => s.exact), 1);
+  const maxPct = Math.max(...scores.map(s => s.pct), 1);
+
+  const card = (title, rows) => `
+    <div class="stats-card">
+      <h3>${title}</h3>
+      ${rows}
+    </div>`;
+
+  const row = (name, val, max, color='var(--green-light)') => `
+    <div class="stats-row">
+      <span class="sr-name">${name}</span>
+      <div class="sr-bar"><div class="sr-bar-fill" style="width:${Math.round(val/max*100)}%;background:${color}"></div></div>
+      <span class="sr-val">${val}</span>
+    </div>`;
+
+  // Łączne punkty
+  const ptsRows = scores.map(s => row(s.p, s.pts, maxPts, 'var(--gold)')).join('');
+
+  // Dokładne wyniki
+  const exactSorted = [...scores].sort((a,b) => b.exact - a.exact);
+  const exactRows = exactSorted.map(s => row(s.p, s.exact, maxExact, '#4ddb81')).join('');
+
+  // % trafień (kierunek + dokładne)
+  const pctSorted = [...scores].sort((a,b) => b.pct - a.pct);
+  const pctRows = pctSorted.map(s => row(s.p, s.pct + '%', maxPct, '#64b5f6')).join('');
+
+  // Liczba wpisanych typów
+  const typedSorted = [...scores].sort((a,b) => b.typed - a.typed);
+  const maxTyped = Math.max(...typedSorted.map(s => s.typed), 1);
+  const typedRows = typedSorted.map(s => row(s.p, s.typed, maxTyped, '#aaa')).join('');
+
+  grid.innerHTML =
+    card('🏆 Punkty łącznie', ptsRows) +
+    card('🎯 Dokładne wyniki', exactRows) +
+    card('📊 % trafień kierunku', pctRows) +
+    card('✏️ Liczba wpisanych typów', typedRows);
+}
+
 // Init
 loadFromSheets();
 setInterval(loadFromSheets, 5 * 60 * 1000);
+startCountdown();
 </script>
 </body>
 </html>
