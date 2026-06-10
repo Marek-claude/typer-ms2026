@@ -936,7 +936,7 @@ function renderGrupy(data) {
       const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
       const posClass = i === 0 ? 'awans-1' : i === 1 ? 'awans-2' : '';
       return `<div class="grupa-row ${posClass}">
-        <div class="grow-team"><span class="pos-num">${i+1}</span>${flag(name)}${name}</div>
+        <div class="grow-team"><span class="pos-num">${i+1}</span>${name}</div>
         <div class="grow-stat">${s.m}</div>
         <div class="grow-stat">${s.w}</div>
         <div class="grow-stat">${s.r}</div>
