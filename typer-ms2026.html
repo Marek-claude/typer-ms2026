@@ -1065,10 +1065,10 @@ function renderRanking(data) {
   }).sort((a,b) => b.pts - a.pts);
 
   // Strzałki — porównaj z poprzednim rankingiem
-  const prevRanking = JSON.parse(sessionStorage.getItem('prevRanking') || '{}');
+  const prevRanking = JSON.parse(localStorage.getItem('prevRanking') || '{}');
   const currRanking = {};
   scores.forEach((s, i) => currRanking[s.p] = i + 1);
-  sessionStorage.setItem('prevRanking', JSON.stringify(currRanking));
+  localStorage.setItem('prevRanking', JSON.stringify(currRanking));
 
   const arrow = (p, i) => {
     const prev = prevRanking[p];
