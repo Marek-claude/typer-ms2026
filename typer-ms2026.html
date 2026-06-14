@@ -835,7 +835,8 @@ function parseCSV(text) {
   return { results, types, mistrz };
 }
 
-// Sprawdź czy kolejka jest odblokowana (pierwszy mecz już się zaczął)
+// Poprzedni ranking do strzałek
+let _prevRanking = {};
 function kolejkaOdblokowana(kolejka) {
   const mecze = MATCHES.filter(m => m.k === kolejka);
   if (!mecze.length) return false;
@@ -1065,10 +1066,10 @@ function renderRanking(data) {
   }).sort((a,b) => b.pts - a.pts);
 
   // Strzałki — porównaj z poprzednim rankingiem
-  const prevRanking = JSON.parse(localStorage.getItem('prevRanking') || '{}');
+  const prevRanking = {..._prevRanking};
   const currRanking = {};
   scores.forEach((s, i) => currRanking[s.p] = i + 1);
-  localStorage.setItem('prevRanking', JSON.stringify(currRanking));
+  _prevRanking = currRanking;
 
   const arrow = (p, i) => {
     const prev = prevRanking[p];
