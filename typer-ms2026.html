@@ -193,6 +193,80 @@ body {
   flex-shrink: 0;
 }
 
+/* ── HISTORIA RANKINGÓW ── */
+.historia-section {
+  margin-top: 24px;
+}
+.historia-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 16px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  user-select: none;
+  transition: border-color 0.2s;
+}
+.historia-toggle:hover { border-color: var(--gold); }
+.historia-toggle-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-400);
+  letter-spacing: 0.03em;
+  flex: 1;
+}
+.historia-toggle-chevron {
+  font-size: 11px;
+  color: var(--gray-400);
+  transition: transform 0.2s;
+}
+.historia-toggle.open .historia-toggle-chevron { transform: rotate(180deg); }
+.historia-body {
+  display: none;
+  background: #0d0d0d;
+  border: 1px solid #2a2a2a;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+.historia-body.open { display: block; }
+.historia-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid #1a1a1a;
+  font-size: 13px;
+}
+.historia-row:last-child { border-bottom: none; }
+.historia-pos {
+  width: 24px;
+  text-align: right;
+  color: var(--gray-400);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.historia-name {
+  flex: 1;
+  color: #ccc;
+  font-weight: 500;
+}
+.historia-pts {
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 14px;
+  min-width: 28px;
+  text-align: right;
+}
+.historia-pts-label {
+  color: var(--gray-400);
+  font-size: 10px;
+}
+
 /* ── TABELA MECZÓW ── */
 .matches-section {
   padding: 0 20px 20px;
@@ -594,6 +668,9 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
     <div class="legend-item"><div class="legend-dot" style="background:#ef9a9a"></div> Pudło (0 pkt)</div>
     <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Typ na mistrza (5 pkt)</div>
   </div>
+
+  <!-- Historia rankingów -->
+  <div id="ranking-historia"></div>
 </div>
 
 <!-- GRUPY -->
@@ -835,7 +912,47 @@ function parseCSV(text) {
   return { results, types, mistrz };
 }
 
-// Poprzedni ranking do strzałek
+// Snapshoty historyczne rankingu
+const SNAPSHOTS = [
+  {
+    label: 'Po połowie I kolejki',
+    shortLabel: 'K1 (½)',
+    ranking: [
+      { p: 'Magda', pts: 13 },
+      { p: 'Miki',  pts: 12 },
+      { p: 'Jakub', pts: 11 },
+      { p: 'Konrad',pts: 10 },
+      { p: 'Asia',  pts: 9  },
+      { p: 'Mały',  pts: 9  },
+      { p: 'Donia', pts: 7  },
+      { p: 'Emi',   pts: 6  },
+      { p: 'Marek', pts: 4  },
+      { p: 'Marta', pts: 4  },
+      { p: 'Mati',  pts: 4  },
+      { p: 'Piotr', pts: 2  },
+    ]
+  },
+  {
+    label: 'Po I kolejce',
+    shortLabel: 'K1',
+    ranking: [
+      { p: 'Magda', pts: 21 },
+      { p: 'Miki',  pts: 20 },
+      { p: 'Asia',  pts: 18 },
+      { p: 'Emi',   pts: 17 },
+      { p: 'Marta', pts: 16 },
+      { p: 'Donia', pts: 16 },
+      { p: 'Jakub', pts: 15 },
+      { p: 'Konrad',pts: 15 },
+      { p: 'Mały',  pts: 13 },
+      { p: 'Mati',  pts: 13 },
+      { p: 'Marek', pts: 12 },
+      { p: 'Piotr', pts: 9  },
+    ]
+  },
+];
+
+// Ostatni snapshot — do strzałek w głównym rankingu
 let _prevRanking = {};
 function kolejkaOdblokowana(kolejka) {
   const mecze = MATCHES.filter(m => m.k === kolejka);
@@ -1065,17 +1182,17 @@ function renderRanking(data) {
     return { p, pts, exact, dir, miss, mistrzTyp };
   }).sort((a,b) => b.pts - a.pts);
 
-  // Strzałki — porównaj z poprzednim rankingiem
-  const prevRanking = {..._prevRanking};
-  const currRanking = {};
-  scores.forEach((s, i) => currRanking[s.p] = i + 1);
-  _prevRanking = currRanking;
+  // Strzałki — porównaj z ostatnim snapshotem
+  const lastSnapshot = SNAPSHOTS[SNAPSHOTS.length - 1];
+  const snapshotRanking = {};
+  lastSnapshot.ranking.forEach((s, i) => snapshotRanking[s.p] = i + 1);
 
   const arrow = (p, i) => {
-    const prev = prevRanking[p];
+    const prev = snapshotRanking[p];
     if (!prev || prev === i + 1) return '';
-    if (prev > i + 1) return '<span style="color:#4ddb81;font-size:12px;margin-left:4px">↑</span>';
-    return '<span style="color:#ef9a9a;font-size:12px;margin-left:4px">↓</span>';
+    const diff = prev - (i + 1);
+    if (diff > 0) return `<span style="color:#4ddb81;font-size:11px;margin-left:4px">↑${diff}</span>`;
+    return `<span style="color:#ef9a9a;font-size:11px;margin-left:4px">↓${Math.abs(diff)}</span>`;
   };
 
   const medals = ['🥇','🥈','🥉'];
@@ -1094,6 +1211,46 @@ function renderRanking(data) {
       ${s.mistrzTyp ? `<div class="rank-mistrz">👑 ${s.mistrzTyp}</div>` : ''}
     </div>
   `).join('');
+
+  renderHistoria();
+}
+
+function renderHistoria() {
+  const container = document.getElementById('ranking-historia');
+  if (!container) return;
+  const medals = ['🥇','🥈','🥉'];
+  container.innerHTML = '<div class="historia-section">' +
+    SNAPSHOTS.slice().reverse().map((snap, si) => {
+      const id = 'snap-' + si;
+      return `
+        <div class="historia-toggle" onclick="toggleHistoria('${id}')">
+          <span style="font-size:16px">📋</span>
+          <span class="historia-toggle-label">Ranking po ${snap.label}</span>
+          <span class="historia-toggle-chevron" id="chev-${id}">▼</span>
+        </div>
+        <div class="historia-body" id="${id}">
+          ${snap.ranking.map((r, i) => `
+            <div class="historia-row">
+              <span class="historia-pos">${i+1}.</span>
+              <span style="font-size:14px">${medals[i] || '🏅'}</span>
+              <span class="historia-name">${r.p}</span>
+              <span class="historia-pts">${r.pts}</span>
+              <span class="historia-pts-label">pkt</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }).join('') +
+  '</div>';
+}
+
+function toggleHistoria(id) {
+  const body = document.getElementById(id);
+  const chev = document.getElementById('chev-' + id);
+  const toggle = body.previousElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  toggle.classList.toggle('open', !isOpen);
 }
 
 function buildthead(id) {
