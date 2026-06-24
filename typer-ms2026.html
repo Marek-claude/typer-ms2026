@@ -992,7 +992,7 @@ const SNAPSHOTS = [
 let _prevRanking = {};
 // Ręczna blokada kolejek — wpisz numer kolejki aby wymusić ZABLOKOWANIE
 // bez względu na godzinę pierwszego meczu. Usuń numer z listy, by wrócić do automatu.
-const RECZNIE_ZABLOKOWANE = [3];
+const RECZNIE_ZABLOKOWANE = [];
 
 function kolejkaOdblokowana(kolejka) {
   if (RECZNIE_ZABLOKOWANE.includes(kolejka)) return false;
