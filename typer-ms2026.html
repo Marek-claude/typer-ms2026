@@ -968,11 +968,34 @@ const SNAPSHOTS = [
       { p: 'Mały',  pts: 17 },
     ]
   },
+  {
+    label: 'Po II kolejce',
+    shortLabel: 'K2',
+    ranking: [
+      { p: 'Magda', pts: 40 },
+      { p: 'Miki',  pts: 39 },
+      { p: 'Jakub', pts: 37 },
+      { p: 'Konrad',pts: 36 },
+      { p: 'Marta', pts: 34 },
+      { p: 'Donia', pts: 34 },
+      { p: 'Marek', pts: 29 },
+      { p: 'Emi',   pts: 29 },
+      { p: 'Piotr', pts: 28 },
+      { p: 'Mati',  pts: 27 },
+      { p: 'Mały',  pts: 23 },
+      { p: 'Asia',  pts: 22 },
+    ]
+  },
 ];
 
 // Ostatni snapshot — do strzałek w głównym rankingu
 let _prevRanking = {};
+// Ręczna blokada kolejek — wpisz numer kolejki aby wymusić ZABLOKOWANIE
+// bez względu na godzinę pierwszego meczu. Usuń numer z listy, by wrócić do automatu.
+const RECZNIE_ZABLOKOWANE = [3];
+
 function kolejkaOdblokowana(kolejka) {
+  if (RECZNIE_ZABLOKOWANE.includes(kolejka)) return false;
   const mecze = MATCHES.filter(m => m.k === kolejka);
   if (!mecze.length) return false;
   // Znajdź najwcześniejszy mecz kolejki
