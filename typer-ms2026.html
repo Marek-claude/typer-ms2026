@@ -1042,15 +1042,50 @@ function kolejkaOdblokowana(kolejka) {
   const kickoff = new Date(2026, parseInt(mm)-1, parseInt(dd), parseInt(hh), parseInt(mi));
   return new Date() >= kickoff;
 }
-function calcPoints(typ, wynik) {
+function parseTypOrWynik(s) {
+  // Obsługuje format "X:Y" (grupowy) lub "X:Y/Zwyciezca" (pucharowy, gdy 90 min to remis)
+  if (!s) return null;
+  const parts = s.split('/');
+  const scorePart = parts[0].trim();
+  const winner = parts[1] ? parts[1].trim() : null;
+  const p = scorePart.split(':');
+  const score = [parseInt(p[0]), parseInt(p[1])];
+  if (isNaN(score[0]) || isNaN(score[1])) return null;
+  return { score, winner };
+}
+
+function calcPoints(typ, wynik, match) {
   if (!typ || !wynik) return null;
-  const parseScore = s => { const p = s.split(':'); return [parseInt(p[0]), parseInt(p[1])]; };
-  const t = parseScore(typ); const w = parseScore(wynik);
-  if (isNaN(t[0]) || isNaN(w[0])) return null;
-  if (t[0] === w[0] && t[1] === w[1]) return 3;
-  const td = t[0]-t[1]; const wd = w[0]-w[1];
-  if ((td > 0 && wd > 0) || (td < 0 && wd < 0) || (td === 0 && wd === 0)) return 1;
-  return 0;
+  const t = parseTypOrWynik(typ);
+  const w = parseTypOrWynik(wynik);
+  if (!t || !w) return null;
+
+  const tIsDraw = t.score[0] === t.score[1];
+  const wIsDraw = w.score[0] === w.score[1];
+
+  // Faza grupowa (lub mecz bez zwycięzcy w razie remisu) — logika klasyczna
+  if (!match || !wIsDraw) {
+    if (t.score[0] === w.score[0] && t.score[1] === w.score[1]) return 3;
+    const td = t.score[0]-t.score[1]; const wd = w.score[0]-w.score[1];
+    if ((td > 0 && wd > 0) || (td < 0 && wd < 0) || (td === 0 && wd === 0 && !match)) return 1;
+    // W fazie pucharowej remis w 90 min bez wskazanego zwycięzcy w wyniku — traktuj jak grupową (nie powinno się zdarzyć)
+    if (td === 0 && wd === 0) return 1;
+    return 0;
+  }
+
+  // Faza pucharowa, mecz zakończył się remisem w 90 min (w.winner ustawiony)
+  if (!tIsDraw) {
+    // Gracz typował zwycięstwo, a był remis w 90 min — pudło niezależnie od tego kto wygrał dogrywkę
+    return 0;
+  }
+
+  // Obaj remisowi — porównaj dokładność wyniku i zgodność zwycięzcy
+  const exactScore = (t.score[0] === w.score[0] && t.score[1] === w.score[1]);
+  const correctWinner = t.winner && w.winner && t.winner.trim().toLowerCase() === w.winner.trim().toLowerCase();
+
+  let pts = exactScore ? 3 : 1;
+  if (correctWinner) pts += 1;
+  return pts;
 }
 
 function renderAll(data) {
@@ -1179,33 +1214,42 @@ function renderMobileCards(id, kolejka, data) {
   container.innerHTML = matches.map(m => {
     const wynik = data?.results?.[m.id] || '';
     const typs = PLAYERS.map(p => odblokowana ? (data?.types?.[m.id]?.[p] || '') : '');
-    const pkts = typs.map(t => calcPoints(t, wynik));
+    const pkts = typs.map(t => calcPoints(t, wynik, m));
 
     const scoreClass = (t, pk) => {
       if (!odblokowana) return 'score-empty';
       if (!t) return 'score-empty';
-      if (pk === 3) return 'score-exact';
-      if (pk === 1) return 'score-dir';
+      if (pk === 3 || pk === 4) return 'score-exact';
+      if (pk === 1 || pk === 2) return 'score-dir';
       if (pk === 0) return 'score-miss';
       return 'score-empty';
     };
     const pktLabel = (pk, t) => {
       if (!odblokowana) return `<div class="typer-cell-pkt pe"></div>`;
+      if (pk === 4) return `<div class="typer-cell-pkt p3">4 pkt</div>`;
       if (pk === 3) return `<div class="typer-cell-pkt p3">3 pkt</div>`;
+      if (pk === 2) return `<div class="typer-cell-pkt p1">2 pkt</div>`;
       if (pk === 1) return `<div class="typer-cell-pkt p1">1 pkt</div>`;
       if (pk === 0) return `<div class="typer-cell-pkt p0">0 pkt</div>`;
       if (t) return `<div class="typer-cell-pkt pe">—</div>`;
       return `<div class="typer-cell-pkt pe"></div>`;
     };
 
+    const fmtMobile = (raw) => {
+      if (!raw) return '';
+      const parts = raw.split('/');
+      if (!parts[1]) return parts[0].trim();
+      return `${parts[0].trim()} <span style="color:var(--gold);font-size:10px">(${parts[1].trim()})</span>`;
+    };
+
     const resultHtml = wynik
-      ? `<div class="match-card-result">${wynik}</div>`
+      ? `<div class="match-card-result">${fmtMobile(wynik)}</div>`
       : `<div class="match-card-result no-result">brak wyniku</div>`;
 
     const typerCells = PLAYERS.map((p, i) => `
       <div class="typer-cell">
         <div class="typer-cell-name">${p}</div>
-        <div class="typer-cell-score ${scoreClass(typs[i], pkts[i])}">${odblokowana ? (typs[i] || '—') : ''}</div>
+        <div class="typer-cell-score ${scoreClass(typs[i], pkts[i])}">${odblokowana ? (fmtMobile(typs[i]) || '—') : ''}</div>
         ${pktLabel(pkts[i], typs[i])}
       </div>
     `).join('');
@@ -1243,9 +1287,11 @@ function renderRanking(data) {
     MATCHES.forEach(m => {
       const typ = data.types[m.id]?.[p] || '';
       const wynik = data.results[m.id] || '';
-      const pk = calcPoints(typ, wynik);
-      if (pk === 3) { pts += 3; exact++; }
+      const pk = calcPoints(typ, wynik, m);
+      if (pk === 4) { pts += 4; exact++; }
+      else if (pk === 3) { pts += 3; exact++; }
       else if (pk === 1) { pts += 1; dir++; }
+      else if (pk === 2) { pts += 2; dir++; }
       else if (pk === 0) { miss++; }
     });
     const mistrzTyp = data.mistrz?.[p] || '';
@@ -1337,6 +1383,32 @@ function buildthead(id) {
   </tr>`;
 }
 
+function winnerInitial(winnerName, match) {
+  if (!winnerName || !match) return '';
+  const home = match.home || '';
+  const away = match.away || '';
+  const w = winnerName.trim().toLowerCase();
+  const isHome = home.toLowerCase().startsWith(w) || w.startsWith(home.toLowerCase());
+  const isAway = away.toLowerCase().startsWith(w) || w.startsWith(away.toLowerCase());
+  const homeLetter = home.charAt(0).toUpperCase();
+  const awayLetter = away.charAt(0).toUpperCase();
+  // Jeśli pierwsze litery się zgadzają, użyj dwóch liter dla rozróżnienia
+  const collision = homeLetter === awayLetter;
+  if (isHome) return collision ? home.slice(0,2) : homeLetter;
+  if (isAway) return collision ? away.slice(0,2) : awayLetter;
+  return winnerName.charAt(0).toUpperCase();
+}
+
+function formatScoreDisplay(raw, match) {
+  if (!raw) return '';
+  const parts = raw.split('/');
+  const score = parts[0].trim();
+  const winner = parts[1] ? parts[1].trim() : null;
+  if (!winner) return score;
+  const initial = winnerInitial(winner, match);
+  return `${score}<span style="position:absolute;top:0;right:1px;font-size:8px;font-weight:800;color:var(--gold);line-height:1">${initial}</span>`;
+}
+
 function renderMatchTable(id, kolejka, data) {
   buildthead(id);
   const tbody = document.getElementById(`tbody-${id}`);
@@ -1345,30 +1417,32 @@ function renderMatchTable(id, kolejka, data) {
   tbody.innerHTML = matches.map(m => {
     const wynik = data?.results?.[m.id] || '';
     const typs = PLAYERS.map(p => odblokowana ? (data?.types?.[m.id]?.[p] || '') : '');
-    const pkts = typs.map(t => calcPoints(t, wynik));
+    const pkts = typs.map(t => calcPoints(t, wynik, m));
 
     const scoreClass = (t, pk) => {
       if (!t) return 'score-empty';
-      if (pk === 3) return 'score-exact';
-      if (pk === 1) return 'score-dir';
+      if (pk === 3 || pk === 4) return 'score-exact';
+      if (pk === 1 || pk === 2) return 'score-dir';
       if (pk === 0) return 'score-miss';
       return 'score-empty';
     };
     const pktClass = (pk) => {
       if (pk === null) return 'pkt-empty';
+      if (pk === 4) return 'pkt-3';
       if (pk === 3) return 'pkt-3';
+      if (pk === 2) return 'pkt-1';
       if (pk === 1) return 'pkt-1';
       return 'pkt-0';
     };
 
-    const typDisplay = (t) => odblokowana ? (t || '—') : '';
+    const typDisplay = (t) => odblokowana ? formatScoreDisplay(t, m) : '';
 
     return `<tr>
       <td class="td-match"><span style="color:var(--gray-400);font-size:10px;margin-right:4px">${m.grp}</span><strong>${m.home}</strong> – <strong>${m.away}</strong></td>
       <td class="td-date">${m.date}<br><span style="color:#555">${m.time}</span></td>
       <td class="td-group">${m.grp}</td>
-      ${typs.map((t,i) => `<td class="td-score ${scoreClass(t, pkts[i])}">${typDisplay(t)}</td>`).join('')}
-      <td class="td-result">${wynik || '—'}</td>
+      ${typs.map((t,i) => `<td class="td-score ${scoreClass(t, pkts[i])}" style="position:relative">${typDisplay(t)}</td>`).join('')}
+      <td class="td-result" style="position:relative">${formatScoreDisplay(wynik, m) || '—'}</td>
       ${pkts.map((pk,i) => `<td class="pkt-cell ${pktClass(pk)}">${pk !== null ? pk : (typs[i] ? '—' : '')}</td>`).join('')}
     </tr>`;
   }).join('');
@@ -1483,8 +1557,10 @@ function renderStatystyki(data) {
       const wynik = data.results[m.id] || '';
       if (!typ) return;
       typed++;
-      const pk = calcPoints(typ, wynik);
-      if (pk === 3) { pts += 3; exact++; }
+      const pk = calcPoints(typ, wynik, m);
+      if (pk === 4) { pts += 4; exact++; }
+      else if (pk === 3) { pts += 3; exact++; }
+      else if (pk === 2) { pts += 2; dir++; }
       else if (pk === 1) { pts += 1; dir++; }
       else if (wynik) { miss++; }
     });
