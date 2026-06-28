@@ -1108,9 +1108,9 @@ function renderGrupy(data) {
   const grid = document.getElementById('grupy-grid');
   if (!grid) return;
 
-  // Zbierz wszystkie grupy z meczów
+  // Zbierz wszystkie grupy z meczów (tylko faza grupowa, k 1-3)
   const grupy = {};
-  MATCHES.forEach(m => {
+  MATCHES.filter(m => m.k <= 3 && m.grp).forEach(m => {
     if (!grupy[m.grp]) grupy[m.grp] = new Set();
     grupy[m.grp].add(m.home);
     grupy[m.grp].add(m.away);
@@ -1371,12 +1371,12 @@ function toggleHistoria(id) {
   toggle.classList.toggle('open', !isOpen);
 }
 
-function buildthead(id) {
+function buildthead(id, showGroup = true) {
   const thead = document.getElementById(`thead-${id}`);
   thead.innerHTML = `<tr>
     <th class="th-match">Mecz</th>
     <th>Data</th>
-    <th>Gr.</th>
+    ${showGroup ? '<th>Gr.</th>' : ''}
     ${PLAYERS.map(p=>`<th class="th-typer th-group-typy">${p}</th>`).join('')}
     <th style="background:#1a1000;color:var(--gold);width:44px;min-width:44px;max-width:44px;">Wynik</th>
     ${PLAYERS.map(p=>`<th class="th-typer th-group-pkt">${p}</th>`).join('')}
@@ -1410,7 +1410,8 @@ function formatScoreDisplay(raw, match) {
 }
 
 function renderMatchTable(id, kolejka, data) {
-  buildthead(id);
+  const showGroup = kolejka <= 3;
+  buildthead(id, showGroup);
   const tbody = document.getElementById(`tbody-${id}`);
   const matches = MATCHES.filter(m => m.k === kolejka);
   const odblokowana = kolejkaOdblokowana(kolejka);
@@ -1440,7 +1441,7 @@ function renderMatchTable(id, kolejka, data) {
     return `<tr>
       <td class="td-match"><span style="color:var(--gray-400);font-size:10px;margin-right:4px">${m.grp}</span><strong>${m.home}</strong> – <strong>${m.away}</strong></td>
       <td class="td-date">${m.date}<br><span style="color:#555">${m.time}</span></td>
-      <td class="td-group">${m.grp}</td>
+      ${showGroup ? `<td class="td-group">${m.grp}</td>` : ''}
       ${typs.map((t,i) => `<td class="td-score ${scoreClass(t, pkts[i])}" style="position:relative">${typDisplay(t)}</td>`).join('')}
       <td class="td-result" style="position:relative">${formatScoreDisplay(wynik, m) || '—'}</td>
       ${pkts.map((pk,i) => `<td class="pkt-cell ${pktClass(pk)}">${pk !== null ? pk : (typs[i] ? '—' : '')}</td>`).join('')}
