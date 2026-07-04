@@ -651,6 +651,7 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
   <div class="tab" onclick="switchTab('kolejka2')">⚽ Kolejka 2</div>
   <div class="tab" onclick="switchTab('kolejka3')">⚽ Kolejka 3</div>
   <div class="tab" onclick="switchTab('faza16')">🏆 1/16</div>
+  <div class="tab" onclick="switchTab('faza8')">🏆 1/8</div>
   <div class="tab" onclick="switchTab('mistrz')">👑 Typ na Mistrza</div>
   <div class="tab" onclick="switchTab('statystyki')">📈 Statystyki</div>
   <div class="tab" onclick="switchTab('instrukcja')">ℹ️ Instrukcja</div>
@@ -728,6 +729,18 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
     </table>
   </div>
   <div class="mobile-cards" id="cards-k4"></div>
+</div>
+
+<!-- 1/8 FINAŁU -->
+<div id="tab-faza8" class="matches-section">
+  <div class="section-title">1/8 finału — faza pucharowa</div>
+  <div class="table-wrapper" id="tablewrap-k5">
+    <table id="table-k5">
+      <thead id="thead-k5"></thead>
+      <tbody id="tbody-k5"></tbody>
+    </table>
+  </div>
+  <div class="mobile-cards" id="cards-k5"></div>
 </div>
 
 <!-- MISTRZ -->
@@ -866,6 +879,14 @@ const MATCHES = [
   {id:86,k:4,date:'03.07',time:'20:00',grp:'',home:'Australia',away:'Egipt'},
   {id:87,k:4,date:'04.07',time:'00:00',grp:'',home:'Argentyna',away:'W.Zielonego Przyląd.'},
   {id:88,k:4,date:'04.07',time:'03:30',grp:'',home:'Kolumbia',away:'Ghana'},
+  {id:89,k:5,date:'04.07',time:'19:00',grp:'',home:'Kanada',away:'Maroko'},
+  {id:90,k:5,date:'04.07',time:'23:00',grp:'',home:'Paragwaj',away:'Francja'},
+  {id:91,k:5,date:'05.07',time:'22:00',grp:'',home:'Brazylia',away:'Norwegia'},
+  {id:92,k:5,date:'06.07',time:'02:00',grp:'',home:'Meksyk',away:'Anglia'},
+  {id:93,k:5,date:'06.07',time:'21:00',grp:'',home:'Portugalia',away:'Hiszpania'},
+  {id:94,k:5,date:'07.07',time:'02:00',grp:'',home:'USA',away:'Belgia'},
+  {id:95,k:5,date:'07.07',time:'18:00',grp:'',home:'Argentyna',away:'Egipt'},
+  {id:96,k:5,date:'07.07',time:'22:00',grp:'',home:'Szwajcaria',away:'Kolumbia'},
   {id:69,k:3,date:'28.06',time:'01:30',grp:'K',home:'DR Kongo',away:'Uzbekistan'},
   {id:70,k:3,date:'28.06',time:'01:30',grp:'K',home:'Kolumbia',away:'Portugalia'},
   {id:67,k:3,date:'28.06',time:'04:00',grp:'J',home:'Jordania',away:'Argentyna'},
@@ -1113,11 +1134,13 @@ function renderAll(data) {
   renderMatchTable('k2', 2, data);
   renderMatchTable('k3', 3, data);
   renderMatchTable('k4', 4, data);
+  renderMatchTable('k5', 5, data);
   renderMistrz(data);
   renderMobileCards('k1', 1, data);
   renderMobileCards('k2', 2, data);
   renderMobileCards('k3', 3, data);
   renderMobileCards('k4', 4, data);
+  renderMobileCards('k5', 5, data);
   renderStatystyki(data);
   applyMobileLayout();
 }
@@ -1213,7 +1236,7 @@ function isMobile() {
 
 function applyMobileLayout() {
   const mobile = isMobile();
-  ['k1','k2','k3','k4'].forEach(id => {
+  ['k1','k2','k3','k4','k5'].forEach(id => {
     const wrap = document.getElementById(`tablewrap-${id}`);
     const cards = document.getElementById(`cards-${id}`);
     if (wrap) wrap.style.display = mobile ? 'none' : '';
@@ -1496,10 +1519,10 @@ function renderMistrz(data) {
 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t,i) => {
-    const names = ['ranking','grupy','kolejka1','kolejka2','kolejka3','faza16','mistrz','statystyki','instrukcja'];
+    const names = ['ranking','grupy','kolejka1','kolejka2','kolejka3','faza16','faza8','mistrz','statystyki','instrukcja'];
     t.classList.toggle('active', names[i] === name);
   });
-  ['ranking','grupy','kolejka1','kolejka2','kolejka3','faza16','mistrz','statystyki','instrukcja'].forEach(n => {
+  ['ranking','grupy','kolejka1','kolejka2','kolejka3','faza16','faza8','mistrz','statystyki','instrukcja'].forEach(n => {
     const el = document.getElementById(`tab-${n}`);
     if (el) {
       el.style.display = n === name ? 'block' : 'none';
