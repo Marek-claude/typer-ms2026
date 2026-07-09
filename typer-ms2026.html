@@ -87,12 +87,15 @@ body {
   border-bottom: 2px solid #222;
   overflow-x: auto;
   padding: 0 12px;
+  scrollbar-width: thin;
 }
+.tabs::-webkit-scrollbar { height: 4px; }
+.tabs::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 .tab {
-  padding: 14px 20px;
-  font-size: 13px;
+  padding: 14px 14px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   cursor: pointer;
   color: var(--gray-400);
@@ -652,7 +655,7 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
   <div class="tab" onclick="switchTab('kolejka3')">⚽ Kolejka 3</div>
   <div class="tab" onclick="switchTab('faza16')">🏆 1/16</div>
   <div class="tab" onclick="switchTab('faza8')">🏆 1/8</div>
-  <div class="tab" onclick="switchTab('cwiercfinal')">🏆 Ćwierćfinał</div>
+  <div class="tab" onclick="switchTab('cwiercfinal')">🏆 1/4</div>
   <div class="tab" onclick="switchTab('mistrz')">👑 Typ na Mistrza</div>
   <div class="tab" onclick="switchTab('statystyki')">📈 Statystyki</div>
   <div class="tab" onclick="switchTab('instrukcja')">ℹ️ Instrukcja</div>
@@ -746,7 +749,7 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
 
 <!-- ĆWIERĆFINAŁ -->
 <div id="tab-cwiercfinal" class="matches-section">
-  <div class="section-title">Ćwierćfinał — faza pucharowa</div>
+  <div class="section-title">1/4 finału — faza pucharowa</div>
   <div class="table-wrapper" id="tablewrap-k6">
     <table id="table-k6">
       <thead id="thead-k6"></thead>
