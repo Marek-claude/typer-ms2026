@@ -657,6 +657,7 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
   <div class="tab" onclick="switchTab('faza8')">🏆 1/8</div>
   <div class="tab" onclick="switchTab('cwiercfinal')">🏆 1/4</div>
   <div class="tab" onclick="switchTab('polfinal')">🏆 1/2</div>
+  <div class="tab" onclick="switchTab('finalowy')">🏆 Finał</div>
   <div class="tab" onclick="switchTab('mistrz')">👑 Typ na Mistrza</div>
   <div class="tab" onclick="switchTab('statystyki')">📈 Statystyki</div>
   <div class="tab" onclick="switchTab('instrukcja')">ℹ️ Instrukcja</div>
@@ -770,6 +771,18 @@ td.td-score { width: 36px; min-width: 36px; max-width: 36px; font-size: 10px; fo
     </table>
   </div>
   <div class="mobile-cards" id="cards-k7"></div>
+</div>
+
+<!-- FINAŁ -->
+<div id="tab-finalowy" class="matches-section">
+  <div class="section-title">Mecz o 3. miejsce i Finał</div>
+  <div class="table-wrapper" id="tablewrap-k8">
+    <table id="table-k8">
+      <thead id="thead-k8"></thead>
+      <tbody id="tbody-k8"></tbody>
+    </table>
+  </div>
+  <div class="mobile-cards" id="cards-k8"></div>
 </div>
 
 <!-- MISTRZ -->
@@ -922,6 +935,8 @@ const MATCHES = [
   {id:100,k:6,date:'12.07',time:'03:00',grp:'',home:'Argentyna',away:'Szwajcaria'},
   {id:101,k:7,date:'14.07',time:'21:00',grp:'',home:'Francja',away:'Hiszpania'},
   {id:102,k:7,date:'15.07',time:'21:00',grp:'',home:'Anglia',away:'Argentyna'},
+  {id:103,k:8,date:'18.07',time:'23:00',grp:'',home:'Francja',away:'Anglia'},
+  {id:104,k:8,date:'19.07',time:'21:00',grp:'',home:'Hiszpania',away:'Argentyna'},
   {id:69,k:3,date:'28.06',time:'01:30',grp:'K',home:'DR Kongo',away:'Uzbekistan'},
   {id:70,k:3,date:'28.06',time:'01:30',grp:'K',home:'Kolumbia',away:'Portugalia'},
   {id:67,k:3,date:'28.06',time:'04:00',grp:'J',home:'Jordania',away:'Argentyna'},
@@ -1143,6 +1158,24 @@ const SNAPSHOTS = [
       { p: 'Asia',  pts: 55 },
     ]
   },
+  {
+    label: 'Po 1/2 finału',
+    shortLabel: '1/2',
+    ranking: [
+      { p: 'Magda', pts: 88 },
+      { p: 'Jakub', pts: 86 },
+      { p: 'Donia', pts: 82 },
+      { p: 'Marek', pts: 76 },
+      { p: 'Piotr', pts: 75 },
+      { p: 'Miki',  pts: 72 },
+      { p: 'Konrad',pts: 72 },
+      { p: 'Mały',  pts: 70 },
+      { p: 'Marta', pts: 68 },
+      { p: 'Mati',  pts: 67 },
+      { p: 'Emi',   pts: 64 },
+      { p: 'Asia',  pts: 55 },
+    ]
+  },
 ];
 
 // Ostatni snapshot — do strzałek w głównym rankingu
@@ -1226,6 +1259,7 @@ function renderAll(data) {
   renderMatchTable('k5', 5, data);
   renderMatchTable('k6', 6, data);
   renderMatchTable('k7', 7, data);
+  renderMatchTable('k8', 8, data);
   renderMistrz(data);
   renderMobileCards('k1', 1, data);
   renderMobileCards('k2', 2, data);
@@ -1234,6 +1268,7 @@ function renderAll(data) {
   renderMobileCards('k5', 5, data);
   renderMobileCards('k6', 6, data);
   renderMobileCards('k7', 7, data);
+  renderMobileCards('k8', 8, data);
   renderStatystyki(data);
   applyMobileLayout();
 }
@@ -1329,7 +1364,7 @@ function isMobile() {
 
 function applyMobileLayout() {
   const mobile = isMobile();
-  ['k1','k2','k3','k4','k5','k6','k7'].forEach(id => {
+  ['k1','k2','k3','k4','k5','k6','k7','k8'].forEach(id => {
     const wrap = document.getElementById(`tablewrap-${id}`);
     const cards = document.getElementById(`cards-${id}`);
     if (wrap) wrap.style.display = mobile ? 'none' : '';
@@ -1612,10 +1647,10 @@ function renderMistrz(data) {
 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t,i) => {
-    const names = ['ranking','grupy','kolejka1','kolejka2','kolejka3','faza16','faza8','cwiercfinal','polfinal','mistrz','statystyki','instrukcja'];
+    const names = ['ranking','grupy','kolejka1','kolejka2','kolejka3','faza16','faza8','cwiercfinal','polfinal','finalowy','mistrz','statystyki','instrukcja'];
     t.classList.toggle('active', names[i] === name);
   });
-  ['ranking','grupy','kolejka1','kolejka2','kolejka3','faza16','faza8','cwiercfinal','polfinal','mistrz','statystyki','instrukcja'].forEach(n => {
+  ['ranking','grupy','kolejka1','kolejka2','kolejka3','faza16','faza8','cwiercfinal','polfinal','finalowy','mistrz','statystyki','instrukcja'].forEach(n => {
     const el = document.getElementById(`tab-${n}`);
     if (el) {
       el.style.display = n === name ? 'block' : 'none';
