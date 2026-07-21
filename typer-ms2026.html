@@ -1465,7 +1465,7 @@ function renderRanking(data) {
     });
     const mistrzTyp = data.mistrz?.[p] || '';
     const mistrzWynik = data.mistrz?.['WINNER'] || '';
-    if (mistrzTyp && mistrzWynik && mistrzTyp === mistrzWynik) pts += 5;
+    if (mistrzTyp && mistrzWynik && mistrzTyp.trim().toLowerCase() === mistrzWynik.trim().toLowerCase()) pts += 5;
     return { p, pts, exact, dir, miss, mistrzTyp };
   }).sort((a,b) => b.pts - a.pts);
 
@@ -1636,7 +1636,7 @@ function renderMistrz(data) {
   const winner = data.mistrz?.['WINNER'] || '';
   tbody.innerHTML = PLAYERS.map(p => {
     const typ = data.mistrz?.[p] || '—';
-    const hit = winner && typ === winner;
+    const hit = winner && typ.trim().toLowerCase() === winner.trim().toLowerCase();
     return `<tr>
       <td style="font-weight:700">${p}</td>
       <td class="mistrz-team" style="${hit ? 'color:var(--gold)' : ''}">${typ}</td>
